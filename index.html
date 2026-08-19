@@ -1,0 +1,2462 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selamat Ulang Tahun</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:#111111;
+    --cream:#FFF4E3;
+    --paper:#FFFFFF;
+    --sunshine:#FFD100;
+    --grape:#8B5CF6;
+    --mint:#2FD9A6;
+    --coral:#FF5A5F;
+    --sky:#4CC3FF;
+    --bubblegum:#FF6FB0;
+    --night-1:#1B1030;
+    --night-2:#0F0A1F;
+    --neon-purple:#C084FC;
+    --neon-green:#39FF9C;
+    --lime:#6aca2ff1;
+    --lime-soft:#BFF08A;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Space Grotesk', sans-serif;
+    overflow-x:hidden;
+    line-height:1.4;
+  }
+  a, button{ font-family:inherit; }
+  ::selection{ background:var(--sunshine); color:var(--ink); }
+
+  img{ max-width:100%; display:block; }
+
+  /* aksesibilitas: fokus keyboard selalu kelihatan jelas */
+  a:focus-visible, button:focus-visible{
+    outline:3px solid var(--ink);
+    outline-offset:3px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{
+      animation-duration:0.001ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:0.001ms !important;
+    }
+  }
+
+  /* ---------- UTIL: kartu & tombol bergaya brutalist ---------- */
+  .brut-card{
+    background:var(--paper);
+    border:3px solid var(--ink);
+    border-radius:18px;
+    box-shadow:8px 8px 0 var(--ink);
+  }
+  .brut-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:16px 30px;
+    background:var(--sunshine);
+    color:var(--ink);
+    border:3px solid var(--ink);
+    border-radius:14px;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+    font-size:14px;
+    box-shadow:6px 6px 0 var(--ink);
+    cursor:pointer;
+    text-decoration: none;
+    transition:transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .brut-btn:hover{ transform:translate(-2px,-2px); box-shadow:8px 8px 0 var(--ink); }
+  .brut-btn:active{ transform:translate(4px,4px); box-shadow:2px 2px 0 var(--ink); }
+
+  .chip{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--paper);
+    border:3px solid var(--ink);
+    border-radius:999px;
+    padding:8px 18px;
+    font-family:'Space Mono', monospace;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    font-size:11px;
+  }
+
+  .chip-terakhir {
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--paper);
+    border:3px solid var(--ink);
+    border-radius:999px;
+    padding:20px 38px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif monospace;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    font-size:11px;
+    transform: rotate(2deg);
+  }
+
+  .placeholder{
+    position:absolute; inset:0;
+    border:10px solid var(--ink);
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    gap:6px; text-align:center; padding:16px;
+  }
+  .placeholder-polaroid{
+    position:absolute; inset:0;
+    border:3px dashed var(--ink);
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    gap:6px; text-align:center; padding:16px;
+  }
+  .placeholder .num{ font-family:'Archivo Black'; font-size:26px; }
+  .placeholder .hint{ font-family:'Space Mono', monospace; font-size:10px; letter-spacing:0.05em; color:#555; line-height:1.5; }
+
+  section{ position:relative; padding:min(12vw,110px) 8vw; }
+  .eyebrow{ margin-bottom:16px; }
+  [data-reveal]{ opacity:0; }
+
+  /* ---------- PRELOADER ---------- */
+  #preloader{
+    position:fixed; inset:0; z-index:999;
+    background:var(--grape);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .pl-box{
+    background:var(--sunshine);
+    border:4px solid var(--ink);
+    border-radius:18px;
+    padding:22px 40px;
+    box-shadow:10px 10px 0 var(--ink);
+    font-family:'Archivo Black';
+    font-size:clamp(20px,4.4vw,38px);
+    text-transform:uppercase;
+    text-align:center;
+    transform:scale(0.7);
+    opacity:0;
+  }
+
+  /* ---------- TICKER / MARQUEE (ungu-putih, pemisah smiley) ---------- */
+  .ticker{
+    background:var(--grape);
+    border-top:3px solid var(--ink);
+    border-bottom:3px solid var(--ink);
+    overflow:hidden;
+    padding:16px 0;
+  }
+  .ticker-track{
+    display:flex;
+    width:max-content;
+    animation:ticker-scroll 22s linear infinite;
+  }
+  .ticker-track span{
+    display:flex; align-items:center; gap:28px;
+    padding:0 18px;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    letter-spacing:0.01em;
+    font-size:clamp(18px,2.6vw,28px);
+    color: var(--paper);
+    white-space:nowrap;
+  }
+  .ticker-track .tk-dot{
+    width:30px; height:30px;
+    border-radius:50%;
+    border:2.5px solid var(--ink);
+    display:inline-flex; align-items:center; justify-content:center;
+    background:var(--paper);
+    color:var(--ink);
+    flex:none;
+    position:relative;
+    font-size:0;
+  }
+  .ticker-track .tk-dot::before{
+    content:"";
+    width:100%; height:100%;
+    display:block;
+    background:
+      radial-gradient(circle 1.6px at 37% 42%, var(--ink) 99%, transparent 100%),
+      radial-gradient(circle 1.6px at 63% 42%, var(--ink) 99%, transparent 100%);
+  }
+  .ticker-track .tk-dot::after{
+    content:"";
+    position:absolute; left:50%; top:54%;
+    width:11px; height:6px;
+    border:2px solid var(--ink);
+    border-top:none;
+    border-left:none; border-right:none;
+    border-bottom-left-radius:9px; border-bottom-right-radius:9px;
+    transform:translateX(-50%);
+  }
+  @keyframes ticker-scroll{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+  }
+
+  /* versi footer */
+  .ticker-footer{
+    background:var(--lime-soft);
+    border-top:3px solid var(--ink);
+    border-bottom:3px solid var(--ink);
+    overflow:hidden;
+    padding:26px 0;
+  }
+  .ticker-track-footer{
+    display:flex;
+    width:max-content;
+    animation:ticker-scroll 22s linear infinite;
+  }
+  .ticker-track-footer span{
+    display:flex; align-items:center; gap:28px;
+    padding:0 18px;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    letter-spacing:0.01em;
+    font-size:clamp(18px,2.6vw,28px);
+    color: #5222c1;
+    white-space:nowrap;
+  }
+  /* ---------- HERO ---------- */
+  #hero{
+    min-height:100svh;
+    display:flex;
+    align-items:center;
+    padding-top:min(16vw,120px);
+    padding-bottom:min(10vw,70px);
+    position:relative;
+    overflow:hidden;
+  }
+  /* -- shape-shape dekorasi latar, senada sama yang di halaman surat --
+     EDIT: ganti src ke images/hero-shape-1.png dst; kalau file belum
+     ada, otomatis muncul bentuk placeholder flat. */
+  .hero-shapes{ position:absolute; inset:0; z-index:0; pointer-events:none; }
+  .h-shape{ position:absolute; width:56px; height:56px; }
+  .h-shape-inner{ width:100%; height:100%; }
+  .h-shape img{object-fit:contain; }
+  .h-shape .shape-fallback{ width:100%; height:100%; }
+  .hs-1{ top:3%; left:5%; width:150px; animation:shape-float 5s ease-in-out infinite; }
+  .hs-2{ top:7%; left:45%; width:270px; animation:shape-float 4.3s ease-in-out infinite 0.3s; }
+  .hs-3{ top:71%; left:-7%; width:350px; animation:shape-float 4.8s ease-in-out infinite 0.6s; }
+  .hs-4{ bottom:40%; left:40%; width:204px; animation:shape-float 5.4s ease-in-out infinite 0.2s; }
+  .hs-5{ top:-18%; right:-3%; width:238px; animation:shape-float 4.5s ease-in-out infinite 0.8s; }
+  .hs-6{ bottom:34%; right:-1.7%; width:254px; animation:shape-float 5s ease-in-out infinite 0.5s; }
+  .hs-7{ top:46%; right:32%; width:30px; animation:shape-float 4.2s ease-in-out infinite 1s; }
+  @media (max-width:900px){
+    .hs-3, .hs-4, .hs-7{ display:none; }
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.05fr 0.95fr;
+    gap:min(6vw,60px);
+    align-items:center;
+    width:100%;
+    position:relative;
+    z-index:2;
+  }
+  .hero-copy{ position:relative; }
+  .hero-title{
+    font-family:'Archivo Black';
+    font-size:clamp(38px,6.2vw,74px);
+    line-height:1.05;
+    letter-spacing:-0.01em;
+  }
+  .hero-title .hl{
+    display:inline-block;
+    background:var(--sunshine);
+    border:3px solid var(--ink);
+    border-radius:10px;
+    padding:2px 14px;
+    transform:rotate(-2deg);
+    box-decoration-break:clone;
+    -webkit-box-decoration-break:clone;
+  }
+  .hero-sub{
+    margin-top:22px;
+    max-width:480px;
+    font-size:clamp(15px,1.6vw,18px);
+    color:#2b2b2b;
+  }
+  .hero-cta-row{
+    margin-top:34px;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    flex-wrap:wrap;
+  }
+  .hero-doodle{ width:64px; height:auto; flex:none; }
+  .curly-arrow{ width:72px; height:auto; flex:none; overflow:visible; }
+  .eyebrow-arrow{
+    position:absolute; top:-6px; left:calc(100% + 6px);
+    width:70px; transform:rotate(-8deg);
+  }
+  .eyebrow-wrap{ position:relative; display:inline-block; }
+  .photo-arrow{
+    position:absolute; top:-15%; left:-19%;
+    width:78px; transform:rotate(12deg) scaleX(-1);
+    z-index:4;
+  }
+
+  /* -- panggung foto + stiker -- */
+  .hero-stage{
+    position:relative;
+    width:min(86vw,420px);
+    margin:0 auto;
+    padding:34px;
+  }
+
+  .hero-hang-plant{
+    position:absolute;
+    top:0; right:8%;
+    width:clamp(90px,10vw,150px);
+    z-index:5;
+    display:flex; flex-direction:column; align-items:center;
+    animation:plant-sway 5s ease-in-out infinite;
+    transform-origin:top center;
+    pointer-events:none;
+  }
+  .hero-hang-plant .hang-string{ display:block; margin:0 auto; }
+  .hero-hang-plant .hang-plant-inner{ position:relative; width:130%; }
+  .hero-hang-plant .hang-plant-inner img{ width:100%; height:100%; object-fit:contain; display:block; }
+  .hero-hang-plant .hang-plant-inner .placeholder{ border-radius:12px; background:rgba(255,255,255,0.55); border-width:3px; }
+  .hero-hang-plant .hang-plant-inner .placeholder .num{ font-size:18px; }
+  .hero-hang-plant .hang-plant-inner .placeholder .hint{ font-size:8.5px; }
+  /* lembar kertas kedua di belakang foto, biar berasa numpuk ala scrapbook */
+  .hero-photo-backsheet{
+    position:absolute;
+    inset:34px;
+    background:var(--grape);
+    border:4px solid var(--ink);
+    border-radius:22px;
+    transform:rotate(4deg);
+    z-index:1;
+  }
+  /* selotip washi di dua sudut atas foto */
+  .washi-tape{
+    position:absolute;
+    width:94px; height:36px;
+    z-index:4;
+    border:2px solid var(--ink);
+    opacity:0.92;
+  }
+  .wt-1{
+    top:190px; left:190%; transform:rotate(19deg);
+    background:repeating-linear-gradient(45deg, var(--sunshine), var(--sunshine) 6px, #FFB300 6px, #FFB300 12px);
+  }
+  .wt-2{
+    top:190px; right:95%; transform:rotate(-56deg);
+    background:repeating-linear-gradient(45deg, var(--sky), var(--sky) 6px, #2FA0E0 6px, #2FA0E0 12px);
+  }
+  .hero-photo-card{
+    position:relative;
+    z-index:2;
+    background:var(--paper);
+    border:4px solid var(--ink);
+    border-radius:22px;
+    box-shadow:14px 14px 0 var(--grape);
+    padding:16px 16px 54px;
+    transform:rotate(-2.5deg);
+  }
+  .hero-photo-area{
+    position:relative;
+    aspect-ratio:3/4;
+    overflow:hidden;
+    border-radius:12px;
+    background:var(--cream);
+  }
+  .hero-photo-area img{
+    width:100%; height:100%; object-fit:cover;
+  }
+  .hero-photo-card .caption{
+    position:absolute; left:20px; right:20px; bottom:14px;
+    font-family:'Permanent Marker', cursive;
+    font-size:20px;
+    color:var(--ink);
+  }
+
+  .sticker{
+    position:absolute;
+    border:3px solid var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+    font-family:'Space Mono', monospace;
+    font-weight:700;
+    box-shadow:5px 5px 0 var(--ink);
+    z-index:4;
+  }
+  .sticker.round{ border-radius:50%; }
+  .st-3{ bottom:-6%; right:10%; width:88px; padding:10px 6px; border-radius:14px; background:var(--sky); font-size:11px; text-transform:uppercase; letter-spacing:0.06em; transform:rotate(4deg); }
+
+  @media (max-width:900px){
+    .hero-grid{ grid-template-columns:1fr; text-align:center; }
+    .hero-sub{ margin-left:auto; margin-right:auto; }
+    .hero-cta-row{ justify-content:center; }
+    .hero-stage{ margin-top:20px; }
+    .st-1{ left:0%; }
+    .st-2{ left:0%; }
+    .st-doodle{ display:none; }
+    .hero-hang-plant{ left:50%; right:auto; top:0; transform:translateX(-50%); }
+    .hero-hang-plant.plant-sway-active{ animation:plant-sway-mid 5s ease-in-out infinite; }
+  }
+
+  /* ---------- GALLERY ---------- */
+  #gallery{ background:var(--paper); border-top:3px solid var(--ink); border-bottom:3px solid var(--ink); }
+  .section-head{ max-width:640px; margin-bottom:50px; }
+  .section-head h2{
+    font-family:'Archivo Black';
+    font-size:clamp(28px,4.4vw,50px);
+    margin-top:14px;
+    line-height:1.05;
+  }
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:34px 28px;
+  }
+  .g-card{
+    background:var(--paper);
+    border:3px solid var(--ink);
+    border-radius:16px;
+    box-shadow:7px 7px 0 var(--ink);
+    padding:12px 12px 40px;
+    position:relative;
+  }
+  .g-card:nth-child(3n+1){ transform:rotate(-2deg); }
+  .g-card:nth-child(3n+2){ transform:rotate(1.5deg); }
+  .g-card:nth-child(3n){ transform:rotate(-1deg); }
+  .g-photo{
+    position:relative;
+    aspect-ratio:1/1;
+    overflow:hidden;
+    border-radius:10px;
+    background:var(--cream);
+  }
+  .g-photo img{ width:100%; height:100%; object-fit:cover; }
+  .g-tag{
+    position:absolute; top:-12px; left:-12px;
+    width:34px; height:34px;
+    border-radius:50%;
+    border:3px solid var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    font-size:15px;
+    box-shadow:3px 3px 0 var(--ink);
+    z-index:2;
+  }
+  .g-card:nth-child(6n+1) .g-tag{ background:var(--sunshine); }
+  .g-card:nth-child(6n+2) .g-tag{ background:var(--coral); color:var(--cream); }
+  .g-card:nth-child(6n+3) .g-tag{ background:var(--sky); }
+  .g-card:nth-child(6n+4) .g-tag{ background:var(--mint); }
+  .g-card:nth-child(6n+5) .g-tag{ background:var(--bubblegum); }
+  .g-card:nth-child(6n+6) .g-tag{ background:var(--grape); color:var(--cream); }
+  .g-caption{
+    position:absolute; left:14px; right:14px; bottom:10px;
+    font-family:'Permanent Marker', cursive;
+    font-size:17px;
+  }
+  @media (max-width:900px){
+    .gallery-grid{ grid-template-columns:repeat(2,1fr); }
+  }
+  @media (max-width:560px){
+    .gallery-grid{ grid-template-columns:1fr; gap:26px; max-width:340px; margin:0 auto; }
+  }
+
+  /* ---------- COUNTDOWN ---------- */
+  #countdown{ background:var(--grape); border-bottom:3px solid var(--ink); color:var(--cream); overflow:hidden; }
+  #countdown .chip{ background:var(--sunshine); color:var(--ink); }
+  #countdown h2{
+    font-family:'Archivo Black';
+    text-transform:uppercase;
+    font-size:clamp(30px,5.4vw,58px);
+    line-height:1.08;
+    margin-top:14px;
+    max-width:780px;
+  }
+  #countdown .cd-sub{
+    margin-top:18px;
+    max-width:520px;
+    margin-left:auto; margin-right:auto;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:clamp(14px,1.6vw,17px);
+    opacity:0.92;
+  }
+  .clock{
+    margin-top:64px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:wrap;
+    padding:10px 0 30px;
+  }
+  .clock .unit{
+    background:var(--paper);
+    color:var(--ink);
+    border:3px solid var(--ink);
+    border-radius:16px;
+    height: 200px;
+    box-shadow:8px 10px 0 var(--ink);
+    padding:20px 14px 18px;
+    width:clamp(240px,15vw,168px);
+    text-align:left;
+    position:relative;
+    margin-left:-26px;
+    transition:transform 0.25s ease, z-index 0s;
+  }
+  .clock .unit:first-child{ margin-left:0; }
+  .clock .unit:nth-child(1){ background:var(--mint); transform:rotate(-9deg); z-index:1; }
+  .clock .unit:nth-child(2){ background:var(--sunshine); transform:rotate(-3deg) translateY(6px); z-index:2; }
+  .clock .unit:nth-child(3){ background:var(--coral); transform:rotate(4deg) translateY(2px); z-index:3; }
+  .clock .unit:nth-child(4){ background:var(--sky); transform:rotate(10deg); z-index:4; }
+  .clock .unit:hover{ transform:translateY(-10px) rotate(0deg) scale(1.04); z-index:9; }
+  .clock .unit-badge{
+    width:38px; height:38px;
+    border-radius:50%;
+    background:var(--paper);
+    border:2.5px solid var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    font-size:30px;
+    margin-bottom:16px;
+  }
+  .clock .val{
+    font-family:'Archivo Black';
+    font-size:clamp(70px,4.6vw,46px);
+    line-height:1;
+  }
+  .clock .lbl{
+    margin-top:10px;
+    font-family:'Space Mono', monospace;
+    font-size:20px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    font-weight:700;
+  }
+  @media (max-width:640px){
+    .clock{ gap:0; }
+    .clock .unit{ width:clamp(96px,26vw,120px); margin-left:-18px; padding:16px 10px 14px; }
+    .clock .unit-badge{ width:30px; height:30px; font-size:13px; margin-bottom:10px; }
+  }
+
+  /* ---------- MESSAGE ---------- */
+  #message{ background:var(--sunshine); border-bottom:3px solid var(--ink); position:relative; overflow:hidden; }
+
+  /* Shape-shape dekorasi yang bisa kamu custom sendiri.
+     EDIT: ganti src ke images/shape-1.png dst — kalau file belum ada,
+     otomatis muncul bentuk placeholder flat di bawah ini. */
+  .message-shapes{ position:absolute; inset:0; z-index:0; pointer-events:none; }
+  .m-shape{ position:absolute; width:56px; height:56px; }
+  .m-shape-inner{ width:100%; height:100%; }
+  .m-shape img{ width:100%; height:100%; object-fit:contain; }
+  .m-shape .shape-fallback{ width:150px; height:150px; }
+  .ms-1{ top:8%; left:15%; width:64px; animation:shape-float 5s ease-in-out infinite; }
+  .ms-2{ top:14%; right:18%; width:46px; animation:shape-float 4.2s ease-in-out infinite 0.3s; }
+  .ms-3{ bottom:20%; left:17%; width:50px; animation:shape-float 4.7s ease-in-out infinite 0.6s; }
+  .ms-4{ bottom:20%; right:22%; width:60px; animation:shape-float 5.4s ease-in-out infinite 0.2s; }
+  .ms-5{ top:44%; left:10%; width:40px; animation:shape-float 4.4s ease-in-out infinite 0.9s; }
+  .ms-6{ top:43%; right:13%; width:40px; animation:shape-float 5.1s ease-in-out infinite 0.5s; }
+  @keyframes shape-float{
+    0%,100%{ transform:translateY(0) rotate(0deg); }
+    50%{ transform:translateY(-12px) rotate(8deg); }
+  }
+  @media (max-width:760px){
+    .ms-5, .ms-6{ display:none; }
+  }
+
+  .message-stack{
+    position:relative;
+    max-width:680px;
+    margin:0 auto;
+  }
+  .message-sheet{
+    position:absolute; inset:0;
+    background:var(--paper);
+    border:4px solid var(--ink);
+    border-radius:20px;
+    pointer-events:none;
+  }
+  .message-sheet.sh-1{ background:var(--cream); transform:rotate(4.5deg) translate(-6px,10px); z-index:0; }
+  .message-sheet.sh-2{ background:#FFE9B8; transform:rotate(-3.5deg) translate(8px,14px); z-index:1; }
+  .message-card{
+    max-width:none;
+    margin:0;
+    position:relative;
+    z-index:2;
+    background:var(--paper);
+    border:4px solid var(--ink);
+    border-radius:20px;
+    box-shadow:10px 10px 0 var(--ink);
+    padding:clamp(28px,5vw,56px);
+    text-align:left;
+    transform:rotate(-1deg);
+    perspective:1400px;
+    overflow:hidden;
+  }
+  .message-page{
+    transform-style:preserve-3d;
+    backface-visibility:hidden;
+    will-change:transform, opacity, filter;
+  }
+  .quote-mark{
+    font-family:'Archivo Black';
+    font-size:64px;
+    line-height:0.6;
+    color:var(--grape);
+    margin-bottom:10px;
+  }
+  .message-text{
+    font-size:clamp(18px,2.4vw,26px);
+    line-height:1.5;
+    min-height:2.4em;
+  }
+  .message-from{
+    margin-top:28px;
+    font-family:'Permanent Marker', cursive;
+    font-size:20px;
+    color:var(--coral);
+    text-align:right;
+  }
+  .message-nav{
+    position:relative;
+    z-index:2;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+    margin-top:26px;
+  }
+  .msg-nav-btn{
+    width:44px; height:44px;
+    border-radius:50%;
+    background:var(--paper);
+    border:3px solid var(--ink);
+    box-shadow:4px 4px 0 var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px;
+    font-weight:700;
+    cursor:pointer;
+    flex:none;
+    transition:transform 0.12s ease;
+  }
+  .msg-nav-btn:hover{ transform:translate(-2px,-2px); }
+  .msg-nav-btn:active{ transform:translate(2px,2px); box-shadow:2px 2px 0 var(--ink); }
+  .msg-dots{ display:flex; align-items:center; gap:9px; }
+  .msg-dot{
+    width:10px; height:10px;
+    border-radius:50%;
+    background:var(--paper);
+    border:2.5px solid var(--ink);
+    cursor:pointer;
+    padding:0;
+    transition:transform 0.15s ease, background 0.15s ease;
+  }
+  .msg-dot.is-active{ background:var(--grape); transform:scale(1.25); }
+  @media (max-width:560px){
+    .message-sheet{ display:none; }
+    .message-card{ transform:none; padding:26px 22px; }
+    .quote-mark{ font-size:48px; }
+  }
+
+  /* ---------- JOKE: TOMBOL "UNLOCK" ---------- */
+  .unlock-wrap{
+    position:relative;
+    z-index:1;
+    max-width:680px;
+    margin:34px auto 0;
+    display:flex;
+    justify-content:center;
+  }
+  .unlock-btn{
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+    background:var(--ink);
+    color:var(--cream);
+    border:3px solid var(--ink);
+    border-radius:14px;
+    padding:16px 28px;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.03em;
+    font-size:14px;
+    box-shadow:6px 6px 0 var(--grape);
+    cursor:pointer;
+    transition:transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .unlock-btn:hover{ transform:translate(-2px,-2px); box-shadow:8px 8px 0 var(--grape); }
+  .unlock-btn:active{ transform:translate(4px,4px); box-shadow:2px 2px 0 var(--grape); }
+  .unlock-price{
+    position:absolute;
+    top:-20px; right:-26px;
+    background:var(--coral);
+    color:var(--cream);
+    border:3px solid var(--ink);
+    border-radius:999px;
+    padding:8px 14px;
+    font-family:'Archivo Black';
+    font-size:15px;
+    transform:rotate(10deg);
+    box-shadow:3px 3px 0 var(--ink);
+  }
+  /* Notifikasi ala pop-up notif HP: nongol di pojok kanan-atas, teksnya
+     dibikin lebih besar & tebal biar lebih keliatan. */
+  .unlock-note{
+    position:fixed;
+    top:24px; right:24px;
+    left:auto; bottom:auto;
+    transform:translateX(60px);
+    background:var(--paper);
+    border:3px solid var(--ink);
+    border-radius:16px;
+    padding:16px 20px;
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:17px;
+    line-height:1.4;
+    text-align:left;
+    box-shadow:7px 7px 0 var(--ink);
+    z-index:9999;
+    opacity:0;
+    pointer-events:none;
+    max-width:min(88vw,360px);
+  }
+  .unlock-note::before{
+    content:'🔔';
+    font-size:24px;
+    line-height:1;
+    flex:none;
+    margin-top:1px;
+  }
+  @media (max-width:640px){
+    .unlock-note{ top:16px; right:16px; left:16px; max-width:none; font-size:15.5px; }
+  }
+
+  /* Notif doa/kata-kata random pas tombol "Tiup Lilinnya" dipencet —
+     desainnya sama kayak notif $100, biar konsisten. */
+  .doa-note{
+    position:fixed;
+    top:24px; right:24px;
+    left:auto; bottom:auto;
+    transform:translateX(60px);
+    background:var(--paper);
+    border:3px solid var(--ink);
+    border-radius:16px;
+    padding:16px 20px;
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:16.5px;
+    line-height:1.45;
+    text-align:left;
+    box-shadow:7px 7px 0 var(--ink);
+    z-index:9999;
+    opacity:0;
+    pointer-events:none;
+    max-width:min(88vw,360px);
+  }
+  .doa-note::before{
+    content:'🕯️';
+    font-size:22px;
+    line-height:1;
+    flex:none;
+    margin-top:1px;
+  }
+  @media (max-width:640px){
+    .doa-note{ top:16px; right:16px; left:16px; max-width:none; font-size:15px; }
+  }
+
+  /* ---------- CELEBRATE: KUE MEWAH DI ATAS PIRING ---------- */
+  #celebrate{
+    background:#F3D9AE;
+    text-align:center;
+    border-bottom:3px solid var(--ink);
+    position:relative;
+    overflow:hidden;
+    padding-top:min(10vw,90px);
+  }
+  #celebrate .chip{ margin-left:auto; margin-right:auto; background:var(--paper); position:relative; z-index:2; }
+  #celebrate h2{
+    font-family:'Archivo Black';
+    font-size:clamp(26px,4vw,46px);
+    margin:16px 0 20px;
+    color:#3B2412;
+    position:relative;
+    z-index:2;
+  }
+
+  /* -- wadah wallpaper/background section, EDIT: taruh gambar di images/celebrate-bg.png -- */
+  .celebrate-bg{
+    position:absolute;
+    inset:0;
+    z-index:0;
+  }
+  .celebrate-bg img{ width:100%; height:100%; object-fit:cover; opacity: 70%;}
+  .celebrate-bg .placeholder{ border-color:rgba(17,17,17,0.35); }
+  .celebrate-scrim{
+    position:absolute;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+  }
+
+  .cake-stage{
+    position:relative;
+    z-index:2;
+    max-width:460px;
+    margin:26px auto 0;
+  }
+  .cake-visual{ position:relative; width:100%; aspect-ratio:400/320; }
+  .candle-layer{ position:absolute; inset:0; pointer-events:none; }
+  .candle-icon{ position:absolute; width:5.2%; transform:translate(-50%,-100%); }
+  .cake-flame{ transform-origin:50% 100%; }
+  .smoke{ position:absolute; width:6px; height:6px; border-radius:50%; background:rgba(17,17,17,0.35); pointer-events:none; }
+
+  /* tombol kotak bertumpuk ala referensi "LET'S TALK" */
+  .candle-btn-wrap{ position:relative; z-index:2; display:inline-block; margin-top:36px; }
+  .candle-btn-ghost{
+    position:absolute; inset:9px -9px -9px 9px;
+    border:3px solid var(--ink);
+    pointer-events:none;
+  }
+  .candle-btn{
+    position:relative;
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--paper);
+    color:var(--ink);
+    border:3px solid var(--ink);
+    padding:16px 38px;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    font-size:14px;
+    cursor:pointer;
+    transition:transform 0.12s ease;
+  }
+  .candle-btn:hover{ transform:translate(-3px,-3px); }
+  .candle-btn:active{ transform:translate(2px,2px); }
+
+  /* ---------- TANAMAN HIAS GANTUNG ---------- */
+  .hanging-plants{
+    position:absolute;
+    top:0; left:0; right:0;
+    z-index:2;
+    pointer-events:none;
+  }
+  .hang-plant{ position:absolute; top:0; }
+  .hang-plant.left{ left:2%; width:clamp(120px,13vw,190px); animation:plant-sway 4.5s ease-in-out infinite; transform-origin:top center; }
+  .hang-plant.right{ right:2%; width:clamp(110px,12vw,170px); animation:plant-sway 5.2s ease-in-out infinite 0.4s; transform-origin:top center; }
+  .hang-plant.mid{ left:50%; width:clamp(80px,8vw,120px); animation:plant-sway-mid 4.8s ease-in-out infinite 0.8s; transform-origin:top center; }
+  @keyframes plant-sway{
+    0%,100%{ transform:rotate(-2.5deg); }
+    50%{ transform:rotate(2.5deg); }
+  }
+  @keyframes plant-sway-mid{
+    0%,100%{ transform:translateX(-50%) rotate(-2deg); }
+    50%{ transform:translateX(-50%) rotate(2deg); }
+  }
+  @media (max-width:760px){
+    .hang-plant.mid{ display:none; }
+    .hang-plant.left, .hang-plant.right{ width:100px; }
+  }
+
+  /* Sulur kecil melingkari pojok kotak kue */
+  .cake-vine{
+    position:absolute;
+    width:clamp(70px,9vw,120px);
+    z-index:0;
+    pointer-events:none;
+  }
+  .cake-vine.tl{ top:-30px; left:-28px; }
+  .cake-vine.br{ bottom:-30px; right:-28px; transform:rotate(180deg); }
+
+
+  .confetti-piece{ position:absolute; top:50%; left:50%; border:2px solid var(--ink); }
+  #confetti-layer{ position:fixed; inset:0; pointer-events:none; z-index:9998; }
+
+  /* ---------- FOOTER: TEMA HIJAU (rombak total) ---------- */
+  .ftg-footer{ position:relative; }
+
+  .ftg-hero{
+   background: #ebff66;
+background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102, 1) 46%, rgba(106, 202, 47, 1) 100%);
+    border-top:3px solid var(--ink);
+    border-bottom:3px solid var(--ink);
+    position:relative;
+    overflow:hidden;
+    padding:min(9vw,84px) 7vw min(7vw,56px);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:36px;
+    flex-wrap:wrap;
+  }
+  .ftg-headline{
+    font-family:'Archivo Black';
+    color:var(--ink);
+    font-size:clamp(30px,6vw,100px);
+    line-height:1.02;
+    max-width:760px;
+    display:flex; flex-wrap:wrap; align-items:center; gap:6px 18px;
+  }
+  .ftg-eyes{ display:inline-flex; gap:10px; margin:4px 10px; vertical-align:middle; }
+  .ftg-eye {
+    width: clamp(70px, 5.4vw, 100px);
+    height: clamp(100px, 3.5vw, 120px);
+    background: var(--paper);
+    border: 4px solid var(--ink);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+}
+  .ftg-eye::after{
+    content:'';
+    width:30%; height:30%; border-radius:50%; background:var(--ink);
+  }
+  .ftg-cta{ position:relative; flex:none; width:clamp(148px,15vw,206px); text-decoration: none;}
+  .ftg-cta::before{
+    content:'';
+    position:absolute; inset:12px -10px -10px 10px;
+    background:var(--lime-soft);
+    border:4px solid var(--ink);
+    border-radius:40px;
+    z-index:1;
+  }
+  .ftg-cta-card {
+    position: relative;
+    display: block;
+    width: 100%;
+    background: var(--paper);
+    border: 4px solid var(--ink);
+    border-radius: 40px;
+    padding: 100px 14px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    z-index: 2;
+    transition: transform 0.12s ease;
+}
+  .ftg-cta-card img{ margin-top: -40px;}
+  .ftg-cta-card:hover{ transform:translate(-2px,-3px); }
+  .ftg-cta-icon{ font-size:26px; margin-bottom:10px; }
+  .ftg-cta-label{ font-family:'Space Grotesk',sans-serif; font-weight:900; text-transform:uppercase; font-size:30px; letter-spacing:0.04em; color:var(--ink); text-decoration: none;}
+
+  /* Kotak surat: ngisi ruang kosong di antara headline sama kartu "Make a
+     Wish", pas dipencet buka arsip surat + wishlist.
+     EDIT: taruh gambar kotak surat di images/mailbox.png */
+  .ftg-mailbox{
+    position:relative; flex:none;
+    width:clamp(126px,12.5vw,168px);
+    background:none; border:none; padding:0; font:inherit; cursor:pointer;
+    text-align:center;
+  }
+  .ftg-mailbox::before{
+    content:'';
+    position:absolute; inset:10px -8px -8px 8px;
+    background:var(--sunshine);
+    border:4px solid var(--ink);
+    border-radius:32px;
+    z-index:1;
+  }
+  .ftg-mailbox-card{
+    position:relative;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:10px;
+    width:100%;
+    background:var(--paper);
+    border:4px solid var(--ink);
+    border-radius:32px;
+    padding:26px 12px;
+    z-index:2;
+    transition:transform 0.12s ease;
+  }
+  .ftg-mailbox-card:hover{ transform:translate(-2px,-3px); }
+  .ftg-mailbox-art{ position:relative; width:66%; aspect-ratio:1/1; }
+  .ftg-mailbox-art img{ width:100%; height:100%; object-fit:contain; }
+  .ftg-mailbox-art .placeholder{ border-width:3px; border-radius:14px; background:rgba(0,0,0,0.03); }
+  .ftg-mailbox-art .placeholder .num{ font-size:26px; }
+  .ftg-mailbox-label{ font-family:'Space Grotesk',sans-serif; font-weight:900; text-transform:uppercase; font-size:12.5px; letter-spacing:0.03em; color:var(--ink); line-height:1.3; }
+
+  @media (max-width:560px){
+    .ftg-hero{ flex-direction:column; align-items:flex-start; }
+    .ftg-cta{ align-self:center; margin-top:10px; }
+    .ftg-mailbox{ align-self:center; margin-top:10px; }
+  }
+
+  /* ---------- MODAL: MAKE A WISH (surat wishlist tersegel) ---------- */
+  .wish-overlay{
+    position:fixed; inset:0;
+    background:rgba(17,17,17,0.55);
+    display:flex; align-items:center; justify-content:center;
+    padding:20px;
+    z-index:10000;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.25s ease;
+  }
+  .wish-overlay.is-open{ opacity:1; pointer-events:auto; }
+  .wish-modal{
+    position:relative;
+    width:min(92vw,480px);
+    max-height:88vh;
+    overflow-y:auto;
+    background:var(--paper);
+    border:4px solid var(--ink);
+    border-radius:24px;
+    box-shadow:12px 12px 0 var(--ink);
+    padding:36px 28px 28px;
+    text-align:center;
+    transform:scale(0.9) translateY(14px);
+    transition:transform 0.25s ease;
+  }
+  .wish-overlay.is-open .wish-modal{ transform:scale(1) translateY(0); }
+  .wish-close{
+    position:absolute; top:14px; right:14px;
+    width:36px; height:36px;
+    border:3px solid var(--ink);
+    border-radius:50%;
+    background:var(--paper);
+    font-size:15px; font-weight:700;
+    cursor:pointer;
+    box-shadow:3px 3px 0 var(--ink);
+    transition:transform 0.12s ease;
+  }
+  .wish-close:hover{ transform:translate(-1px,-1px); }
+  .wish-close:active{ transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink); }
+  /* EDIT: taruh desain kotak surat/amplop di images/wish-envelope.png,
+     images/wish-envelope-sealed.png (amplop tersegel), dan
+     images/wish-envelope-open.png (amplop kebuka). */
+  .wish-envelope-art{ position:relative; width:min(62%,190px); aspect-ratio:4/3; margin:0 auto 16px; }
+  .wish-envelope-art img{ width:100%; height:100%; object-fit:contain; }
+  .wish-envelope-art .placeholder{ border-width:3px; border-radius:16px; background:rgba(0,0,0,0.03); }
+  .wish-envelope-art .placeholder .num{ font-size:30px; }
+  .wish-title{ font-family:'Archivo Black'; font-size:clamp(18px,3vw,23px); margin-bottom:10px; line-height:1.3; }
+  .wish-sub{ font-size:14.5px; color:#333; margin-bottom:18px; line-height:1.55; }
+  .wish-textarea{
+    width:100%;
+    min-height:120px;
+    border:3px solid var(--ink);
+    border-radius:14px;
+    padding:14px;
+    font-family:'Space Grotesk', sans-serif;
+    font-size:15px;
+    resize:vertical;
+    margin-bottom:16px;
+  }
+  .wish-textarea:focus{ outline:3px solid var(--sunshine); outline-offset:2px; }
+  .wish-submit-btn{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--grape); color:var(--cream);
+    border:3px solid var(--ink); border-radius:14px;
+    padding:14px 26px;
+    font-family:'Space Grotesk',sans-serif; font-weight:700;
+    text-transform:uppercase; letter-spacing:0.03em; font-size:14px;
+    box-shadow:5px 5px 0 var(--ink);
+    cursor:pointer;
+    transition:transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .wish-submit-btn:hover{ transform:translate(-2px,-2px); box-shadow:7px 7px 0 var(--ink); }
+  .wish-submit-btn:active{ transform:translate(2px,2px); box-shadow:2px 2px 0 var(--ink); }
+  .wish-date-chip{
+    display:inline-block;
+    background:var(--sunshine);
+    border:3px solid var(--ink);
+    border-radius:10px;
+    padding:6px 14px;
+    font-family:'Space Mono', monospace;
+    font-weight:700;
+    font-size:13px;
+    transform:rotate(-1.5deg);
+    margin-bottom:6px;
+  }
+  .wish-readback{
+    background:var(--cream);
+    border:3px dashed var(--ink);
+    border-radius:14px;
+    padding:16px;
+    font-family:'Permanent Marker', cursive;
+    font-size:16.5px;
+    line-height:1.6;
+    white-space:pre-wrap;
+    text-align:left;
+  }
+  .wish-mini-list{
+    margin-top:18px;
+    display:flex; flex-wrap:wrap; gap:8px;
+    justify-content:center;
+  }
+  .wish-mini-chip{
+    display:inline-flex; align-items:center; gap:6px;
+    background:var(--cream);
+    border:2.5px solid var(--ink);
+    border-radius:999px;
+    padding:6px 12px;
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    font-weight:700;
+  }
+  .wish-mini-empty{ font-size:13px; color:#777; margin-top:14px; }
+
+  /* ---------- MODAL: KOTAK SURAT (arsip surat + wishlist) ---------- */
+  .mailbox-tabs{ display:flex; gap:10px; margin-bottom:18px; }
+  .mailbox-tab{
+    flex:1;
+    background:var(--paper);
+    border:3px solid var(--ink);
+    border-radius:12px;
+    padding:10px 8px;
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:13.5px;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+    cursor:pointer;
+    transition:transform 0.12s ease, background 0.12s ease;
+  }
+  .mailbox-tab.is-active{ background:var(--sunshine); transform:translate(-1px,-1px); box-shadow:3px 3px 0 var(--ink); }
+  .mailbox-panel{ display:none; text-align:left; }
+  .mailbox-panel.is-active{ display:block; }
+  .mailbox-list{
+    display:flex; flex-direction:column; gap:12px;
+    max-height:50vh; overflow-y:auto;
+    padding-right:4px;
+  }
+  .mailbox-item{
+    background:var(--cream);
+    border:3px solid var(--ink);
+    border-radius:14px;
+    padding:14px 16px;
+  }
+  .mailbox-item-text{ font-size:14.5px; line-height:1.55; color:#222; }
+  .mailbox-item-from{
+    margin-top:8px;
+    font-family:'Space Mono', monospace;
+    font-size:11.5px;
+    font-weight:700;
+    color:#555;
+  }
+  .mailbox-item.is-locked{
+    background:var(--paper);
+    border-style:dashed;
+    display:flex; align-items:center; gap:10px;
+    color:#555;
+    font-size:13.5px;
+  }
+  .mailbox-empty{
+    font-size:14px; color:#555; text-align:center; padding:20px 10px;
+  }
+  .mailbox-wish-item{
+    display:flex; align-items:flex-start; gap:10px;
+    background:var(--cream);
+    border:3px solid var(--ink);
+    border-radius:14px;
+    padding:12px 14px;
+  }
+  .mailbox-wish-item input[type="checkbox"]{
+    width:22px; height:22px;
+    flex:none;
+    margin-top:2px;
+    accent-color:var(--grape);
+    cursor:pointer;
+  }
+  .mailbox-wish-item label{ font-size:14.5px; line-height:1.5; cursor:pointer; flex:1; }
+  .mailbox-wish-item.is-checked{ background:#EAFBF3; }
+  .mailbox-wish-item.is-checked label{ text-decoration:line-through; color:#666; }
+
+  .ftg-bottom{
+    background:var(--ink);
+    color:var(--cream);
+    padding:min(6vw,50px) 7vw;
+    display:grid;
+    grid-template-columns:1.1fr 1fr auto auto;
+    align-items:center;
+    gap:40px;
+  }
+  .ftg-brand{ display:flex; flex-direction:column; align-items:flex-start; gap:18px; text-align:left; }
+  .ftg-brand-name{ font-family:'Archivo Black'; font-size:clamp(15px,1.8vw,19px); letter-spacing:0.02em; }
+  .ftg-socials{ display:flex; gap:10px; }
+  .ftg-social{
+    width:44px; height:44px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:30px; border:2px solid var(--ink);
+  }
+  .ftg-signup-label{ font-size:12.5px; color:rgba(255,244,227,0.75); margin-bottom:8px; }
+  .ftg-signup{ display:flex; align-items:center; max-width:280px; }
+  .ftg-signup input{
+    flex:1; background:transparent; border:2px solid rgba(255,244,227,0.4); border-right:none;
+    border-radius:20px 0 0 20px; padding:10px 16px; color:var(--cream); font-family:'Space Grotesk',sans-serif; font-size:13px;
+  }
+  .ftg-signup input::placeholder{ color:rgba(255,244,227,0.45); }
+  .ftg-signup input:focus{ outline:none; }
+  .ftg-signup button{
+    border:2px solid rgba(255,244,227,0.4); background:var(--lime); border-radius:0 20px 20px 0;
+    width:42px; height:40px; display:flex; align-items:center; justify-content:center; color:var(--ink); font-size:14px; cursor:pointer; flex:none;
+  }
+  .ftg-col{ display:flex; flex-direction:column; align-items:flex-start; gap:12px; text-align:left; }
+  .ftg-col-title{ font-size:11.5px; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255,244,227,0.5); margin-bottom:2px; }
+  .ftg-col a{ color:var(--cream); text-decoration:none; font-size:14px; }
+  .ftg-col a:hover{ text-decoration:underline; }
+  .footer-signature{ font-family:'Permanent Marker', cursive; font-size:clamp(17px,2vw,20px); }
+  .footer-signature .footer-name{ color:var(--lime); }
+  .footer-top{
+    background:transparent;
+    color:var(--cream);
+    border:2px solid rgba(255,244,227,0.4);
+    border-radius:14px;
+    padding:10px 18px;
+    font-family:'Space Mono', monospace;
+    font-weight:700;
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:transform 0.12s ease, background 0.12s ease;
+  }
+  .footer-top:hover{ transform:translate(-2px,-2px); background:rgba(255,244,227,0.08); }
+  .footer-top:active{ transform:translate(2px,2px); }
+
+  /* Ilustrasi kosong di tengah footer, ngisi ruang antara "Untuk @..."
+     sama link Jelajah/Dari — EDIT: taruh gambar di
+     images/footer-illustration.png */
+  .ftg-illustration{
+    position:relative;
+    width:min(100%,240px);
+    aspect-ratio:16/10;
+    justify-self:center;
+  }
+  .ftg-illustration img{ width:100%; height:100%; object-fit:contain; }
+  .ftg-illustration .placeholder{
+    border-width:3px;
+    border-color:rgba(255,244,227,0.35);
+    border-radius:16px;
+    background:rgba(255,244,227,0.04);
+  }
+  .ftg-illustration .placeholder .num{ color:var(--cream); }
+  .ftg-illustration .placeholder .hint{ color:rgba(255,244,227,0.55); }
+
+  @media (max-width:820px){
+    .ftg-bottom{ grid-template-columns:1fr 1fr; row-gap:34px; }
+    .ftg-brand{ grid-column:1 / -1; }
+    .ftg-illustration{ grid-column:1 / -1; width:min(100%,280px); margin:0 auto; }
+  }
+  @media (max-width:560px){
+    .ftg-bottom{ grid-template-columns:1fr; }
+  }
+
+  .footer-credit{
+    background:var(--ink);
+    text-align:center;
+    font-family:'Space Mono', monospace;
+    font-size:10px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:rgba(255,244,227,0.5);
+    padding:16px 0 22px;
+    border-top:1px solid rgba(255,244,227,0.12);
+  }
+
+  /* ---------- MUSIC TOGGLE ---------- */
+  #music-toggle{
+    position:fixed;
+    right:22px; bottom:22px;
+    z-index:9997;
+    width:58px; height:58px;
+    border-radius:14px;
+    background:var(--sunshine);
+    border:3px solid var(--ink);
+    box-shadow:5px 5px 0 var(--ink);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    transition:transform 0.12s ease;
+  }
+  #music-toggle:hover{ transform:translate(-2px,-2px); }
+  #music-toggle:active{ transform:translate(3px,3px); }
+  #music-toggle .bars{ display:flex; align-items:flex-end; gap:3px; height:16px; }
+  #music-toggle .bar{ width:4px; background:var(--ink); border-radius:1px; height:6px; }
+  #music-toggle.is-playing .bar{ animation:bar-bounce 0.8s ease-in-out infinite; }
+  #music-toggle .bar:nth-child(1){ animation-delay:0s; }
+  #music-toggle .bar:nth-child(2){ animation-delay:0.15s; }
+  #music-toggle .bar:nth-child(3){ animation-delay:0.3s; }
+  @keyframes bar-bounce{ 0%,100%{ height:6px; } 50%{ height:16px; } }
+  #music-hint{
+    position:fixed; right:22px; bottom:88px; z-index:9997;
+    font-family:'Space Mono', monospace; font-size:10px; letter-spacing:0.08em; text-transform:uppercase;
+    background:var(--ink); color:var(--cream);
+    border:2px solid var(--ink); border-radius:8px;
+    padding:8px 12px; max-width:170px; text-align:right; opacity:0;
+  }
+  @media (max-width:640px){
+    #music-toggle{ right:16px; bottom:16px; width:50px; height:50px; }
+    #music-hint{ right:16px; bottom:74px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div id="preloader">
+  <div class="pl-box" id="pl-box">Amanda's Birthday</div>
+</div>
+
+<!-- MUSIK LATAR
+     EDIT: taruh file musik kamu di /music/lagu.mp3 -->
+<audio id="bg-music" src="music/lagu.mp3" loop preload="none"></audio>
+<button id="music-toggle" aria-label="Putar musik latar">
+  <div class="bars"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
+</button>
+<div id="music-hint">Klik untuk putar musik</div>
+
+<!-- CONFETTI LAYER -->
+<div id="confetti-layer"></div>
+
+<!-- ============ HERO ============ -->
+<section id="hero">
+  <!-- Shape-shape dekorasi latar, senada sama yang di halaman surat.
+       EDIT: ganti src ke images/hero-shape-1.png dst kalau mau custom. -->
+  <div class="hero-shapes" aria-hidden="true">
+    <div class="h-shape hs-1">
+      <div class="h-shape-inner">
+        <img src="images/hero-shape-1.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><path d="M30 4l6 18h19l-15 11 6 18-16-11-16 11 6-18-15-11h19z" fill="var(--sunshine)" stroke="#111" stroke-width="3" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+    <div class="h-shape hs-2">
+      <div class="h-shape-inner">
+        <img src="images/hero-shape-2.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><circle cx="30" cy="30" r="24" fill="var(--mint)" stroke="#111" stroke-width="3"/></svg>
+      </div>
+    </div>
+    <div class="h-shape hs-3">
+      <div class="h-shape-inner">
+        <img src="images/hero-shape-3.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><rect x="8" y="8" width="44" height="44" rx="10" fill="var(--bubblegum)" stroke="#111" stroke-width="3" transform="rotate(12 30 30)"/></svg>
+      </div>
+    </div>
+    <div class="h-shape hs-4">
+      <div class="h-shape-inner">
+        <img src="images/hero-shape-4.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><path d="M30 6c8 10 18 16 18 27a18 18 0 01-36 0c0-11 10-17 18-27z" fill="var(--sky)" stroke="#111" stroke-width="3"/></svg>
+      </div>
+    </div>
+    <div class="h-shape hs-5">
+      <div class="h-shape-inner">
+        <img src="images/hero-shape-5.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><path d="M6 30c8-14 16 14 24 0s16 14 24 0" stroke="#111" stroke-width="4" stroke-linecap="round" fill="none"/></svg>
+      </div>
+    </div>
+    <div class="h-shape hs-6">
+      <div class="h-shape-inner">
+        <img src="images/hero-shape-6.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><rect x="6" y="26" width="48" height="8" fill="var(--coral)" stroke="#111" stroke-width="3" transform="rotate(-8 30 30)"/></svg>
+      </div>
+    </div>
+    <div class="h-shape hs-7">
+      <div class="h-shape-inner">
+        <svg class="shape-fallback" viewBox="0 0 60 60" fill="none"><path d="M30 4v10M30 46v10M4 30h10M46 30h10M12 12l7 7M41 41l7 7M48 12l-7 7M19 41l-7 7" stroke="#111" stroke-width="3.5" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-hang-plant" aria-hidden="true">
+    <div class="hang-plant-inner" style="aspect-ratio:180/260;">
+      <img src="images/plant-right.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    </div>
+  </div>
+
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow-wrap">
+        <div class="chip eyebrow">✦ 23 Agustus 2026 | AMANDA'S SPECIAL DAY</div>
+       
+      </div>
+      <!-- EDIT: ganti nama & headline -->
+      <h1 class="hero-title">Selamat Ulang Tahun,<br><span class="hl">Amanda</span>!</h1>
+      <!-- EDIT: subjudul -->
+      <p class="hero-sub">Wishing you the happiest birthday! Today is all about celebrating you, so scroll down and enjoy a look back at your brightest smiles and memories.</p>
+      <div class="hero-cta-row">
+        <a href="#gallery" class="brut-btn">MULAI JELAJAHI ↓</a>
+       <img src="" alt="">
+      </div>
+    </div>
+
+    <!-- Foto utama + stiker-stiker di sekelilingnya.
+         EDIT: taruh foto di images/foto-hero.png -->
+    <div class="hero-stage" data-reveal>
+      <!-- lembar kertas ungu di belakang foto, biar berasa numpuk ala scrapbook -->
+      <div class="hero-photo-backsheet" aria-hidden="true"></div>
+
+      <div class="hero-photo-card">
+        <div class="hero-photo-area">
+          <img src="images/hero.jpg" alt="Foto utama" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="placeholder-polaroid"><div class="num">✦</div><div class="hint"></div></div>
+        </div>
+        <!-- EDIT: caption di bawah foto -->
+        <div class="caption">SI PALING ULTAH ✨</div>
+      </div>
+
+      <div class="sticker st-3">Yeay!!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TICKER ============ -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>
+      <span class="tk-dot">✦</span>Selamat Ulang Tahun
+      <span class="tk-dot">🎂</span>Happy Birthday
+      <span class="tk-dot">🎈</span>Sehat Selalu
+      <span class="tk-dot">✦</span>Bahagia Terus
+      <span class="tk-dot">🎉</span>Selamat Ulang Tahun
+      <span class="tk-dot">🎂</span>Happy Birthday
+      <span class="tk-dot">🎈</span>Sehat Selalu
+      <span class="tk-dot">✦</span>Bahagia Terus
+    </span>
+    <span>
+      <span class="tk-dot">✦</span>Selamat Ulang Tahun
+      <span class="tk-dot">🎂</span>Happy Birthday
+      <span class="tk-dot">🎈</span>Sehat Selalu
+      <span class="tk-dot">✦</span>Bahagia Terus
+      <span class="tk-dot">🎉</span>Selamat Ulang Tahun
+      <span class="tk-dot">🎂</span>Happy Birthday
+      <span class="tk-dot">🎈</span>Sehat Selalu
+      <span class="tk-dot">✦</span>Bahagia Terus
+    </span>
+  </div>
+</div>
+
+<!-- ============ GALLERY ============ -->
+<section id="gallery">
+  <div class="section-head" data-reveal>
+    <div class="chip">Kilas balik</div>
+    <!-- EDIT: judul galeri -->
+    <h2>Beberapa momen yang selalu kami suka.</h2>
+     <div class="washi-tape wt-1" aria-hidden="true"></div>
+      <div class="washi-tape wt-2" aria-hidden="true"></div>
+  </div>
+
+  <div class="gallery-grid">
+    <!-- EDIT teks di .g-caption & taruh foto di /images sesuai nama -->
+    <div class="g-card">
+      <div class="g-photo">
+        <img src="images/foto-1.jpg" alt="Foto 1" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+      </div>
+      <div class="g-tag">★</div>
+      <div class="g-caption">Momen 1</div>
+    </div>
+    <div class="g-card">
+      <div class="g-photo">
+        <img src="images/foto-2.jpg" alt="Foto 2" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      </div>
+      <div class="g-tag">♥</div>
+      <div class="g-caption">Momen 2</div>
+    </div>
+    <div class="g-card">
+      <div class="g-photo">
+        <img src="images/foto-3.jpg" alt="Foto 3" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      </div>
+      <div class="g-tag">✦</div>
+      <div class="g-caption">Momen 3</div>
+    </div>
+    <div class="g-card">
+      <div class="g-photo">
+        <img src="images/foto-4.jpg" alt="Foto 4" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      </div>
+      <div class="g-tag">☺</div>
+      <div class="g-caption">Momen 4</div>
+    </div>
+    <div class="g-card">
+      <div class="g-photo">
+        <img src="images/foto-5.jpg" alt="Foto 5" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      </div>
+      <div class="g-tag">✷</div>
+      <div class="g-caption">Momen 5</div>
+    </div>
+    <div class="g-card">
+      <div class="g-photo">
+        <img src="images/foto-6.jpg" alt="Foto 6" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+  
+      </div>
+      <div class="g-tag">✿</div>
+      <div class="g-caption">Momen 6</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COUNTDOWN ============ -->
+<section id="countdown" style="text-align:center;">
+  <div class="section-head" data-reveal style="margin-left:auto; margin-right:auto; text-align:center; max-width:820px;">
+    <div class="chip">GOLDEN BIRTHDAY</div>
+    <!-- EDIT: kalimat countdown -->
+    <h2 style="margin-left:auto; margin-right:auto;">23 ON AUGUST 23RD</h2>
+    <p class="cd-sub">"Menghitung hari menuju usia 23 di tanggal 23. Semoga perjalanan menuju babak baru ini dipenuhi banyak cerita seru dan hal baik.""</p>
+  </div>
+  <div class="clock">
+    <div class="unit"><div class="unit-badge">⧗</div><div class="val" id="cd-days">00</div><div class="lbl">Hari</div></div>
+    <div class="unit"><div class="unit-badge">✿</div><div class="val" id="cd-hours">00</div><div class="lbl">Jam</div></div>
+    <div class="unit"><div class="unit-badge">✷</div><div class="val" id="cd-mins">00</div><div class="lbl">Menit</div></div>
+    <div class="unit"><div class="unit-badge">✦</div><div class="val" id="cd-secs">00</div><div class="lbl">Detik</div></div>
+  </div>
+</section>
+
+<!-- ============ MESSAGE ============ -->
+<section id="message">
+  <!-- Shape-shape dekorasi, EDIT dengan taruh file di images/shape-1.png dst -->
+  <div class="message-shapes" aria-hidden="true">
+    <div class="m-shape ms-1">
+      <div class="m-shape-inner">
+        <img src="images/shape-1.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><path d="M30 4l6 18h19l-15 11 6 18-16-11-16 11 6-18-15-11h19z" fill="var(--grape)" stroke="#111" stroke-width="3" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+    <div class="m-shape ms-2">
+      <div class="m-shape-inner">
+        <img src="images/shape-2.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><circle cx="30" cy="30" r="24" fill="var(--coral)" stroke="#111" stroke-width="3"/></svg>
+      </div>
+    </div>
+    <div class="m-shape ms-3">
+      <div class="m-shape-inner">
+        <img src="images/shape-3.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><rect x="8" y="8" width="44" height="44" rx="10" fill="var(--sky)" stroke="#111" stroke-width="3" transform="rotate(12 30 30)"/></svg>
+      </div>
+    </div>
+    <div class="m-shape ms-4">
+      <div class="m-shape-inner">
+        <img src="images/shape-4.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><path d="M30 6c8 10 18 16 18 27a18 18 0 01-36 0c0-11 10-17 18-27z" fill="var(--mint)" stroke="#111" stroke-width="3"/></svg>
+      </div>
+    </div>
+    <div class="m-shape ms-5">
+      <div class="m-shape-inner">
+        <img src="images/shape-5.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><path d="M6 30c8-14 16 14 24 0s16 14 24 0" stroke="#111" stroke-width="4" stroke-linecap="round" fill="none"/></svg>
+      </div>
+    </div>
+    <div class="m-shape ms-6">
+      <div class="m-shape-inner">
+        <img src="images/shape-6.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><rect x="6" y="26" width="48" height="8" fill="var(--bubblegum)" stroke="#111" stroke-width="3" transform="rotate(-8 30 30)"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="message-stack" data-reveal>
+    <div class="message-sheet sh-2" aria-hidden="true"></div>
+    <div class="message-sheet sh-1" aria-hidden="true"></div>
+    <div class="message-card">
+      <div class="message-page" id="messagePage">
+        <div class="quote-mark">&ldquo;</div>
+        <!-- EDIT: isi ucapan / doa panjang untuk yang berulang tahun, boleh tambah lebih dari 1 halaman -->
+        <div class="message-text" id="messageText">
+          Semoga setiap langkah di tahun barumu dipenuhi hal-hal baik yang selama ini kamu perjuangkan. Terima kasih sudah jadi kamu yang selalu hangat untuk orang-orang di sekitarmu.
+        </div>
+        <div class="message-from" id="messageFrom">— Dari kami, dengan sayang</div>
+      </div>
+    </div>
+  </div>
+  <div class="message-nav" data-reveal>
+    <button class="msg-nav-btn" id="msgPrev" aria-label="Ucapan sebelumnya">←</button>
+    <div class="msg-dots" id="msgDots"></div>
+    <button class="msg-nav-btn" id="msgNext" aria-label="Ucapan berikutnya">→</button>
+  </div>
+
+  <!-- Data ucapan — EDIT / tambah objek baru di sini kalau mau lebih dari 3 "lembar" surat -->
+  <script id="messagesData" type="application/json">
+  [
+    { "text": "Terima kasih sudah bertahan melewati hari-hari yang berat, fase-fase bingung, dan proses panjang yang nggak mudah. Kalau bukan karena ketangguhanmu di masa lalu, Amanda hari ini nggak akan sekeren dan sehebat sekarang.", "from": "— Dari Amanda yang Dulu, dengan Bangga" },
+    { "text": "Hari ini giliranmu yang jadi pusat semesta. Nikmati setiap tawa, apresiasi setiap hal kecil yang sudah kamu capai, dan ingatlah kalau kehadiranmu selalu memberi energi hangat buat orang-orang di sekitarmu.", "from": "Dari Amanda Hari Ini, yang Sedang Dirayakan" },
+    { "text": "Melangkahlah ke umur yang baru dengan kepala tegak. Di depan sana, ada banyak cerita seru, mimpi-mimpi yang siap terwujud, dan bahagia yang sudah menunggu untuk kamu jemput. Kamu pasti bisa melaluinya!", "from": "— Dari Amanda di Masa Depan, yang Menunggumu" }
+  ]
+  </script>
+
+  <!-- JOKE: tombol "unlock" harapan lengkap, cuma bercanda -->
+  <div class="unlock-wrap" data-reveal>
+    <button class="unlock-btn" id="unlock-btn">
+      <span class="unlock-price">$100</span>
+      🔒 MAU LIAT UCAPAN NYA LEBIH BANYAK?
+    </button>
+  </div>
+  <div class="unlock-note" id="unlock-note">Malah nyoba dibeli 🫵😹 santai gratis kok, tp kalo mau saweria boleh :v</div>
+  <div class="doa-note" id="doaNote"><span id="doaNoteText"></span></div>
+</section>
+
+<!-- ============ CELEBRATE ============ -->
+<section id="celebrate">
+  <!-- WADAH BACKGROUND SECTION — EDIT: taruh gambar wallpaper kamu di images/celebrate-bg.png,
+       otomatis kepasang full-cover di belakang kue. Kalau belum ada file-nya, muncul
+       kotak placeholder putus-putus sebagai penanda. -->
+  <div class="celebrate-bg" aria-hidden="true">
+    <img src="images/celebrate.jpg" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <div class="placeholder"><div class="num">🖼️</div><div class="hint">images/celebrate-bg.png</div></div>
+  </div>
+  <div class="celebrate-scrim" aria-hidden="true"></div>
+
+   <div class="hanging-plants" aria-hidden="true">
+    <div class="hang-plant left">
+      <div class="hang-plant-inner" style="aspect-ratio:200/340;">
+        <img src="images/plant-left.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      </div>
+    </div>
+    <div class="hang-plant right">
+      <div class="hang-plant-inner" style="aspect-ratio:200/340;">
+        <img src="images/plant-right.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      </div>
+    </div>
+  </div>
+
+  <div data-reveal>
+    <div class="chip-terakhir" style="font-size: 17px;">Ayo sambut umur mu yang baru wkwk</div>
+    <!-- EDIT: kalimat ajakan tiup lilin -->
+    <h1 class="hero-title"><span class="hl">Tiup Lilinnya..</span>!</h1>
+
+
+    <div class="cake-stage">
+      <div class="cake-visual" id="cake" aria-hidden="true">
+        <img class="cake-photo-img" style="width:100%;height:100%;object-fit:contain;" src="images/cake.png" alt="Foto kue" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <svg class="cake-fallback-svg" style="display:none;width:100%;height:100%;" viewBox="0 0 400 320" fill="none" preserveAspectRatio="xMidYMax meet">
+          <!-- bayangan piring -->
+          <ellipse cx="200" cy="262" rx="152" ry="18" fill="#111" opacity="0.10"/>
+          <!-- piring -->
+          <ellipse cx="200" cy="252" rx="172" ry="30" fill="var(--paper)" stroke="#111" stroke-width="4"/>
+          <ellipse cx="200" cy="250" rx="138" ry="19" fill="none" stroke="#111" stroke-width="2" opacity="0.35"/>
+
+          <!-- tingkat bawah kue -->
+          <rect x="86" y="176" width="228" height="70" rx="14" fill="#FBD0DA" stroke="#111" stroke-width="4"/>
+          <!-- piping bulat simetris, 11 titik jarak rata sekitar titik tengah x=200 -->
+          <g>
+            <circle cx="100" cy="176" r="9" fill="var(--paper)" stroke="#111" stroke-width="2.5"/>
+            <circle cx="120" cy="176" r="9" fill="var(--paper)" stroke="#111" stroke-width="2.5"/>
+            <circle cx="140" cy="176" r="9" fill="var(--paper)" stroke="#111" stroke-width="2.5"/>
+            <circle cx="160" cy="176" r="9" fill="var(--paper)" stroke="#111" stroke-width="2.5"/>
+            <circle cx="180" cy="176" r="9" fill="var(--paper)" stroke="#111" stroke-width="2.5"/>
+            <circle cx="200" cy="176" r="9" fill="var(--paper)" stroke="#111" stroke-width="2.5"/>
+            <circle cx="220" cy="176" r="9" fill="var(--paper)" stroke="#111" stroke-width="2.5"/>
+            <circle cx="240" cy="176" r="9" fill="var(--paper)" stroke="#111" stroke-width="2.5"/>
+            <circle cx="260" cy="176" r="9" fill="var(--paper)" stroke="#111" stroke-width="2.5"/>
+            <circle cx="280" cy="176" r="9" fill="var(--paper)" stroke="#111" stroke-width="2.5"/>
+            <circle cx="300" cy="176" r="9" fill="var(--paper)" stroke="#111" stroke-width="2.5"/>
+          </g>
+          <!-- garis krim bergelombang rata, 6 lengkung sama besar -->
+          <path d="M87,214 q19,-14 38,0 q19,-14 38,0 q19,-14 38,0 q19,-14 38,0 q19,-14 38,0 q19,-14 38,0" stroke="#111" stroke-width="2.5" fill="none" opacity="0.45"/>
+
+          <!-- tingkat atas kue -->
+          <rect x="132" y="112" width="136" height="66" rx="12" fill="#D9C6EE" stroke="#111" stroke-width="4"/>
+          <!-- topping krim meleleh: 6 lengkung simetris, tinggi sama rata -->
+          <path d="M132,112 q11.3,14 22.7,0 q11.3,14 22.7,0 q11.3,14 22.6,0 q11.3,14 22.7,0 q11.3,14 22.7,0 q11.3,14 22.6,0 L268,98 L132,98 Z"
+            fill="#FFF4E3" stroke="#111" stroke-width="3" stroke-linejoin="round"/>
+          <!-- 3 ceri simetris di atas krim, jarak rata -->
+          <circle cx="160" cy="98" r="7" fill="var(--coral)" stroke="#111" stroke-width="2.5"/>
+          <circle cx="200" cy="98" r="7" fill="var(--coral)" stroke="#111" stroke-width="2.5"/>
+          <circle cx="240" cy="98" r="7" fill="var(--coral)" stroke="#111" stroke-width="2.5"/>
+          <path d="M160 91c2-6 8-8 8-8M200 91c2-6 8-8 8-8M240 91c2-6 8-8 8-8" stroke="#2F7A4C" stroke-width="2.5" stroke-linecap="round"/>
+
+          <!-- bintang emas dekorasi, simetris di kiri-kanan -->
+          <path d="M80 150l3.6 7.4 8.1 1.2-5.9 5.7 1.4 8.1-7.2-3.8-7.2 3.8 1.4-8.1-5.9-5.7 8.1-1.2z" fill="var(--sunshine)" stroke="#111" stroke-width="2"/>
+          <path d="M320 150l3.6 7.4 8.1 1.2-5.9 5.7 1.4 8.1-7.2-3.8-7.2 3.8 1.4-8.1-5.9-5.7 8.1-1.2z" fill="var(--sunshine)" stroke="#111" stroke-width="2"/>
+        </svg>
+        <div class="candle-layer">
+          <svg class="candle-icon" viewBox="0 0 20 60" style="left:38%; top:31%;"><rect x="6" y="14" width="8" height="46" rx="2" fill="var(--sky)" stroke="#111" stroke-width="2"/><path class="cake-flame" d="M10 0c3.3 4.3 5.4 7.4 5.4 10.8a5.4 5.4 0 01-10.8 0C4.6 7.4 6.7 4.3 10 0z" fill="var(--coral)" stroke="#111" stroke-width="1.5"/></svg>
+          <svg class="candle-icon" viewBox="0 0 20 60" style="left:44%; top:31%;"><rect x="6" y="14" width="8" height="46" rx="2" fill="var(--bubblegum)" stroke="#111" stroke-width="2"/><path class="cake-flame" d="M10 0c3.3 4.3 5.4 7.4 5.4 10.8a5.4 5.4 0 01-10.8 0C4.6 7.4 6.7 4.3 10 0z" fill="var(--coral)" stroke="#111" stroke-width="1.5"/></svg>
+          <svg class="candle-icon" viewBox="0 0 20 60" style="left:50%; top:31%;"><rect x="6" y="14" width="8" height="46" rx="2" fill="var(--mint)" stroke="#111" stroke-width="2"/><path class="cake-flame" d="M10 0c3.3 4.3 5.4 7.4 5.4 10.8a5.4 5.4 0 01-10.8 0C4.6 7.4 6.7 4.3 10 0z" fill="var(--coral)" stroke="#111" stroke-width="1.5"/></svg>
+          <svg class="candle-icon" viewBox="0 0 20 60" style="left:56%; top:31%;"><rect x="6" y="14" width="8" height="46" rx="2" fill="var(--sunshine)" stroke="#111" stroke-width="2"/><path class="cake-flame" d="M10 0c3.3 4.3 5.4 7.4 5.4 10.8a5.4 5.4 0 01-10.8 0C4.6 7.4 6.7 4.3 10 0z" fill="var(--coral)" stroke="#111" stroke-width="1.5"/></svg>
+          <svg class="candle-icon" viewBox="0 0 20 60" style="left:62%; top:31%;"><rect x="6" y="14" width="8" height="46" rx="2" fill="var(--grape)" stroke="#111" stroke-width="2"/><path class="cake-flame" d="M10 0c3.3 4.3 5.4 7.4 5.4 10.8a5.4 5.4 0 01-10.8 0C4.6 7.4 6.7 4.3 10 0z" fill="var(--coral)" stroke="#111" stroke-width="1.5"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="candle-btn-wrap">
+      <span class="candle-btn-ghost" aria-hidden="true"></span>
+      <button class="candle-btn" id="celebrate-btn"><span>Tiup Lilinnya 🎂</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER: TEMA HIJAU ============ -->
+<footer class="ftg-footer" id="footer">
+  <div class="ftg-hero">
+    <!-- EDIT: kalimat penutup -->
+    <h2 class="ftg-headline">2026 * THANK YOU FOR
+      <span class="ftg-eyes">
+        <span class="ftg-eye"></span>
+        <span class="ftg-eye"></span>
+        <span style="color: var(--grape); -webkit-text-stroke-width: 3px;
+  -webkit-text-stroke-color: rgb(0, 0, 0);">ALWAYS</span></span>
+      BEING YOURSELF
+  </h2>
+    <button type="button" class="ftg-mailbox" id="mailboxOpenBtn" aria-label="Buka kotak surat">
+      <div class="ftg-mailbox-card">
+        <div class="ftg-mailbox-art" aria-hidden="true">
+          <img src="images/mailbox.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="placeholder" style="display:none;"><div class="num">📬</div><div class="hint">images/mailbox.png</div></div>
+        </div>
+        <div class="ftg-mailbox-label">Kotak<br>Surat</div>
+      </div>
+    </button>
+
+    <a href="#" id="wishOpenBtn" class="ftg-cta">
+      <span class="ftg-cta-card">
+        <span class="ftg-cta-label"><br>Make <br> a <br> Wish</span>
+        <img src="images/one-wish-willow.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      </span>
+    </a>
+  </div>
+
+  <!-- ============ MODAL: MAKE A WISH — bisa nambah kapan aja sampai 23 Agustus 2027 ============ -->
+  <div class="wish-overlay" id="wishOverlay" aria-hidden="true">
+    <div class="wish-modal" role="dialog" aria-modal="true" aria-labelledby="wishTitle">
+      <button type="button" class="wish-close" id="wishCloseBtn" aria-label="Tutup">✕</button>
+
+      <!-- STATE 1: form buat nambah wish, tetap aktif & bisa dipakai berkali-kali -->
+      <div class="wish-state" id="wishStateForm">
+        <div class="wish-envelope-art" aria-hidden="true">
+          <img src="images/wish-envelope.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="placeholder" style="display:none;"><div class="num">✉️</div><div class="hint">images/wish-envelope.png<br>(desain kotak surat/amplop)</div></div>
+        </div>
+        <h3 id="wishTitle" class="wish-title">Tambahin wishlist buat setahun ke depan</h3>
+        <p class="wish-sub">Bisa nambah kapan aja &amp; bertahap sampai <strong>23 Agustus 2027</strong> — nanti pas dibuka, tinggal centang mana yang udah kejadian ✅</p>
+        <textarea class="wish-textarea" id="wishTextarea" maxlength="300" placeholder="Contoh: tahun depan aku pengen..."></textarea>
+        <button type="button" class="wish-submit-btn" id="wishSubmitBtn">Tambah ke Wishlist ✉️</button>
+        <div class="wish-mini-list" id="wishMiniList"></div>
+      </div>
+
+      <!-- STATE 2: udah lewat tanggal buka, arahin ke Kotak Surat -->
+      <div class="wish-state" id="wishStatePastUnlock" style="display:none;">
+        <div class="wish-envelope-art" aria-hidden="true">
+          <img src="images/wish-envelope-open.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="placeholder" style="display:none;"><div class="num">💌</div><div class="hint">images/wish-envelope-open.png</div></div>
+        </div>
+        <h3 class="wish-title">Waktunya buka wishlist-mu! 💌</h3>
+        <p class="wish-sub">Semua yang udah kamu tulis sekarang bisa dilihat &amp; dicentang satu-satu di Kotak Surat.</p>
+        <button type="button" class="wish-submit-btn" id="wishGoToMailboxBtn">Buka Kotak Surat 📬</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL: KOTAK SURAT — arsip semua surat ucapan + wishlist ============ -->
+  <div class="wish-overlay" id="mailboxOverlay" aria-hidden="true">
+    <div class="wish-modal" role="dialog" aria-modal="true" aria-labelledby="mailboxTitle">
+      <button type="button" class="wish-close" id="mailboxCloseBtn" aria-label="Tutup">✕</button>
+      <h3 id="mailboxTitle" class="wish-title">📬 Kotak Surat</h3>
+      <p class="wish-sub">Semua surat ucapan &amp; wishlist yang udah kesimpen, dalam satu tempat.</p>
+
+      <div class="mailbox-tabs">
+        <button type="button" class="mailbox-tab is-active" id="mailboxTabLetters">✉️ Surat</button>
+        <button type="button" class="mailbox-tab" id="mailboxTabWishes">🌠 Wishlist</button>
+      </div>
+
+      <div class="mailbox-panel is-active" id="mailboxPanelLetters">
+        <div class="mailbox-list" id="mailboxLetterList"></div>
+      </div>
+      <div class="mailbox-panel" id="mailboxPanelWishes">
+        <div class="mailbox-list" id="mailboxWishList"></div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="ticker-footer" aria-hidden="true">
+  <div class="ticker-track-footer">
+    <span>
+      <span class="">✦</span>お誕生日おめでとう
+      <span class="">✦</span>ずっと元気でいてね
+      <span class="">✦</span>いつも幸せでいてね
+      <span class="">✦</span>素敵な一年になりますように
+      <span class="">✦</span>笑顔いっぱいの毎日を
+      <span class="">✦</span>生まれてきてくれてありがとう
+    </span>
+    <span>
+      <span class="">✦</span>お誕生日おめでとう
+      <span class="">✦</span>ずっと元気でいてね
+      <span class="">✦</span>いつも幸せでいてね
+      <span class="">✦</span>素敵な一年になりますように
+      <span class="">✦</span>笑顔いっぱいの毎日を
+      <span class="">✦</span>生まれてきてくれてありがとう
+    </span>
+  </div>
+</div>
+  <div class="ftg-bottom">
+    <div class="ftg-brand">
+      <!-- EDIT: nama/label -->
+      <div class="ftg-brand-name">Untuk @aamandae</div>
+      <div class="ftg-socials" aria-hidden="true">
+        <span class="ftg-social" style="background: var(--coral);">♥</span>
+        <span class="ftg-social" style="background:var(--grape); color:var(--cream);">✿</span>
+        <span class="ftg-social" style="background: green;">✷</span>
+        <span class="ftg-social" style="background:var(--bubblegum);">☺</span>
+      </div>
+      <div>
+        <div class="ftg-signup-label">Tulis balasan ucapan buat aku</div>
+        <div class="ftg-signup">
+          <input type="text" placeholder="Ketik ucapanmu di sini...">
+          <button type="button" aria-label="Kirim">➤</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ilustrasi tengah footer — EDIT: taruh gambar di images/footer-illustration.png -->
+    <div class="ftg-illustration" aria-hidden="true">
+      <img src="images/footer-illustration.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="placeholder" style="display:none;"><div class="num">🎨</div><div class="hint">images/footer-illustration.png</div></div>
+    </div>
+
+    <div class="ftg-col">
+      <div class="ftg-col-title">Jelajah</div>
+      <a href="#hero">Beranda</a>
+      <a href="#gallery">Galeri</a>
+      <a href="#message">Ucapan</a>
+      <a href="#celebrate">Tiup Lilin</a>
+    </div>
+
+    <div class="ftg-col">
+      <div class="ftg-col-title">Dari</div>
+      <!-- EDIT: ganti nama pengirim -->
+      <div class="footer-signature">By <span class="footer-name">@cleavyln</span></div>
+      <button class="footer-top" id="back-to-top">Kembali ke atas ↑</button>
+    </div>
+  </div>
+
+  <div class="footer-credit">Dibuat dengan sepenuh hati &mdash; template ulang tahun &nbsp;·&nbsp; <span id="footer-year"></span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ============================================================
+   EDIT: TANGGAL ULANG TAHUN BERIKUTNYA (format: 'YYYY-MM-DDTHH:mm:ss')
+   ============================================================ */
+const NEXT_BIRTHDAY = new Date('2027-08-23T00:00:00');
+
+/* ---------------- PRELOADER (cepat & snappy) ---------------- */
+const plTl = gsap.timeline({
+  onComplete: () => {
+    document.getElementById('preloader').style.display = 'none';
+    introTl.play();
+  }
+});
+plTl
+  .to('#pl-box', { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(2.4)' })
+  .to('#pl-box', { scale: 1.04, duration: 0.35, ease: 'power1.inOut', yoyo: true, repeat: 1 }, '+=0.1')
+  .to('#preloader', { yPercent: -100, duration: 0.55, ease: 'power3.in' }, '+=0.15');
+
+/* ---------------- HERO INTRO (cepat, tidak ada per-huruf) ---------------- */
+const introTl = gsap.timeline({ paused: true });
+introTl
+  .from('.hero-title', { y: 24, opacity: 0, duration: 0.55, ease: 'power3.out' })
+  .from('#hero .chip', { opacity: 0, y: 10, duration: 0.4 }, '<')
+  .from('.hero-sub', { y: 16, opacity: 0, duration: 0.5 }, '-=0.25')
+  .from('.hero-cta-row', { y: 12, opacity: 0, duration: 0.45 }, '-=0.2')
+  .from('.hero-photo-backsheet', { scale: 0.85, opacity: 0, duration: 0.5, ease: 'power2.out' }, '-=0.3')
+  .from('.hero-photo-card', { scale: 0.85, opacity: 0, duration: 0.55, ease: 'back.out(1.6)' }, '-=0.4')
+  .from('.washi-tape', { scale: 0, opacity: 0, duration: 0.35, stagger: 0.08, ease: 'back.out(2.5)' }, '-=0.15')
+  .from('.sticker', { scale: 0, opacity: 0, duration: 0.4, stagger: 0.08, ease: 'back.out(2.5)' }, '-=0.25')
+  .from('.spin-badge-wrap', { scale: 0, opacity: 0, duration: 0.45, ease: 'back.out(2)' }, '-=0.3')
+  .from('.hero-hang-plant', { opacity: 0, duration: 0.5, ease: 'power2.out' }, '-=0.25')
+  .from('.h-shape-inner', { scale: 0, opacity: 0, duration: 0.4, stagger: 0.06, ease: 'back.out(2.5)' }, '-=0.3');
+
+/* ---------------- STIKER: mengambang pelan, tanpa parallax mouse ---------------- */
+if (!prefersReducedMotion) {
+  gsap.utils.toArray('.sticker').forEach((el, i) => {
+    gsap.to(el, { y: '+=10', duration: 2.2 + i * 0.3, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+  });
+}
+
+/* ---------------- SCROLL REVEALS (singkat & cepat, sesuai gaya brutalist) ---------------- */
+gsap.utils.toArray('[data-reveal]').forEach((el) => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 26 },
+    {
+      opacity: 1, y: 0, duration: 0.5, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%' }
+    }
+  );
+});
+
+/* ---------------- HITUNG MUNDUR: kartu waktu masuk dari pojok kanan layar (nggak keliatan dulu), satu-satu, mantul halus ---------------- */
+ScrollTrigger.batch('.clock .unit', {
+  start: 'top 90%',
+  onEnter: (batch) => {
+    gsap.fromTo(batch,
+      { opacity: 0, x: '120vw', scale: 0.85 },
+      { opacity: 1, x: 0, scale: 1, duration: 0.9, ease: 'back.out(1.4)', stagger: 0.2 }
+    );
+  },
+  once: true
+});
+
+/* ---------------- GALERI: kartu muncul dari bawah ke atas, satu-satu ---------------- */
+ScrollTrigger.batch('.g-card', {
+  start: 'top 90%',
+  onEnter: (batch) => {
+    gsap.fromTo(batch,
+      { opacity: 0, y: 70, scale: 0.82 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.65, ease: 'back.out(1.8)', stagger: 0.14 }
+    );
+  },
+  once: true
+});
+
+/* ---------------- SURAT: shape-shape latar pop-up pas discroll, gaya sama kayak stiker ---------------- */
+ScrollTrigger.batch('.m-shape-inner', {
+  start: 'top 88%',
+  onEnter: (batch) => {
+    gsap.fromTo(batch,
+      { scale: 0, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(2.5)', stagger: 0.08 }
+    );
+  },
+  once: true
+});
+
+/* ---------------- COUNTDOWN ---------------- */
+function updateCountdown() {
+  const now = new Date();
+  let diff = NEXT_BIRTHDAY - now;
+
+  if (diff <= 0) {
+    diff = 0;
+  }
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const mins = Math.floor((diff / (1000 * 60)) % 60);
+  const secs = Math.floor((diff / 1000) % 60);
+
+  document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+  document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+  document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
+  document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+/* ---------------- TIUP LILIN ---------------- */
+function extinguishFlame(flame, originRect, delay) {
+  if (!flame) return;
+  gsap.killTweensOf(flame);
+  gsap.to(flame, { scaleY: 0, scaleX: 0.3, opacity: 0, duration: 0.3, ease: 'power2.in', delay });
+  for (let i = 0; i < 3; i++) {
+    const smoke = document.createElement('div');
+    smoke.className = 'smoke';
+    smoke.style.left = (originRect.left + originRect.width / 2 - 3) + 'px';
+    smoke.style.top = (originRect.top + 6) + 'px';
+    document.body.appendChild(smoke);
+    gsap.to(smoke, {
+      y: -46 - i * 8, x: gsap.utils.random(-14, 14), opacity: 0,
+      scale: gsap.utils.random(1.4, 2.2), duration: 1.3, delay, ease: 'power1.out',
+      onComplete: () => smoke.remove()
+    });
+  }
+  gsap.delayedCall(delay + 2, () => {
+    gsap.fromTo(flame, { scaleY: 0, scaleX: 0.3, opacity: 0 }, { scaleY: 1, scaleX: 1, opacity: 1, duration: 0.4, ease: 'back.out(3)' });
+  });
+}
+function blowCandle() {
+  document.querySelectorAll('.cake-flame').forEach((flame, i) => {
+    const rect = flame.getBoundingClientRect();
+    extinguishFlame(flame, rect, i * 0.05);
+  });
+}
+
+/* ---------------- NOTIF DOA RANDOM pas lilin ditiup ---------------- */
+const DOA_QUOTES = [
+  'Semoga semua yang kamu perjuangkan diam-diam, tahun ini mulai kelihatan hasilnya. 🤍',
+  'Semoga umur yang nambah ini juga dibarengi rezeki, kesehatan, dan hati yang tenang.',
+  'Apapun yang kamu minta barusan, semoga Tuhan kabulkan di waktu yang paling pas.',
+  'Semoga tahun ini kamu makin sering berhenti sejenak buat bersyukur sama diri sendiri.',
+  'Selamat bertambah usia — semoga makin dikelilingi orang-orang yang beneran sayang kamu.',
+  'Semoga langkahmu tahun ini dimudahkan, dan capeknya selalu berbuah manis.',
+  'Semoga kamu selalu dikasih kekuatan buat jadi versi terbaik dari dirimu sendiri.',
+  'Semoga tahun depan ketemu kamu yang lebih bahagia dari hari ini. Aamiin.'
+];
+const doaNote = document.getElementById('doaNote');
+const doaNoteText = document.getElementById('doaNoteText');
+function showRandomDoa() {
+  if (!doaNote || !doaNoteText) return;
+  const quote = DOA_QUOTES[Math.floor(Math.random() * DOA_QUOTES.length)];
+  doaNoteText.textContent = quote;
+  gsap.killTweensOf(doaNote);
+  gsap.fromTo(doaNote, { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.4, ease: 'back.out(1.8)' });
+  gsap.delayedCall(4, () => gsap.to(doaNote, { opacity: 0, x: 60, duration: 0.3, ease: 'power2.in' }));
+}
+
+/* ---------------- CONFETTI BURST (kotak-kotak, cocok sama gaya brutalist) ---------------- */
+const confettiColors = ['#FFD100', '#8B5CF6', '#2FD9A6', '#FF5A5F', '#4CC3FF', '#FF6FB0'];
+document.getElementById('celebrate-btn').addEventListener('click', () => {
+  blowCandle();
+  showRandomDoa();
+  const layer = document.getElementById('confetti-layer');
+  const originX = window.innerWidth / 2;
+  const originY = window.innerHeight * 0.7;
+  for (let i = 0; i < 60; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    const size = gsap.utils.random(8, 14);
+    piece.style.width = size + 'px';
+    piece.style.height = size * gsap.utils.random(0.5, 1) + 'px';
+    piece.style.background = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+    piece.style.left = originX + 'px';
+    piece.style.top = originY + 'px';
+    layer.appendChild(piece);
+    const angle = gsap.utils.random(0, Math.PI * 2);
+    const distance = gsap.utils.random(120, 420);
+    const endX = Math.cos(angle) * distance;
+    const endY = Math.sin(angle) * distance - 200;
+    gsap.to(piece, {
+      x: endX, y: endY, rotation: gsap.utils.random(-360, 360), opacity: 0,
+      duration: gsap.utils.random(0.9, 1.5), ease: 'power2.out',
+      onComplete: () => piece.remove()
+    });
+  }
+  gsap.fromTo('#celebrate-btn', { scale: 1 }, { scale: 1.08, duration: 0.15, yoyo: true, repeat: 1, ease: 'power2.inOut' });
+});
+
+/* ---------------- TANAMAN GANTUNG: daun digambar otomatis ----------------
+   Satu daun dasar (bentuk lonjong + urat) digambar ulang berkali-kali
+   dengan posisi/rotasi berbeda, jadi hasilnya rimbun tanpa nulis SVG
+   panjang manual untuk tiap helai. */
+const SVGNS = 'http://www.w3.org/2000/svg';
+const LEAF_COLORS = ['#2F7A4C', '#3E9761', '#1E5C38', '#4CAE75'];
+
+function makeLeaf(fill) {
+  const g = document.createElementNS(SVGNS, 'g');
+  const body = document.createElementNS(SVGNS, 'path');
+  body.setAttribute('d', 'M0,0 C-9,-6 -13,-18 -8,-30 C-5,-36 0,-38 0,-38 C0,-38 5,-36 8,-30 C13,-18 9,-6 0,0 Z');
+  body.setAttribute('fill', fill);
+  body.setAttribute('stroke', '#111');
+  body.setAttribute('stroke-width', '2');
+  const vein = document.createElementNS(SVGNS, 'path');
+  vein.setAttribute('d', 'M0,-2 L0,-34');
+  vein.setAttribute('stroke', '#0b3d20');
+  vein.setAttribute('stroke-width', '1.3');
+  vein.setAttribute('stroke-linecap', 'round');
+  vein.setAttribute('opacity', '0.55');
+  const sideVeins = document.createElementNS(SVGNS, 'path');
+  sideVeins.setAttribute('d', 'M0,-10 L-5,-17 M0,-10 L5,-17 M0,-19 L-4,-25 M0,-19 L4,-25');
+  sideVeins.setAttribute('stroke', '#0b3d20');
+  sideVeins.setAttribute('stroke-width', '1');
+  sideVeins.setAttribute('opacity', '0.5');
+  g.appendChild(body); g.appendChild(vein); g.appendChild(sideVeins);
+  return g;
+}
+function placeLeaf(parentG, x, y, rotateDeg, scale, colorIndex) {
+  const wrap = document.createElementNS(SVGNS, 'g');
+  wrap.setAttribute('transform', `translate(${x},${y}) rotate(${rotateDeg}) scale(${scale})`);
+  wrap.appendChild(makeLeaf(LEAF_COLORS[colorIndex % LEAF_COLORS.length]));
+  parentG.appendChild(wrap);
+}
+function buildLeafCluster(g) {
+  const cx = parseFloat(g.dataset.cx || 100);
+  const cy = parseFloat(g.dataset.cy || 86);
+  const count = parseInt(g.dataset.count || 8, 10);
+  const baseScale = parseFloat(g.dataset.scale || 1.15);
+  for (let i = 0; i < count; i++) {
+    const t = count === 1 ? 0 : (i / (count - 1)) * 2 - 1;
+    const angle = t * 55;
+    const xOff = t * 42;
+    const yOff = -18 - (1 - Math.abs(t)) * 14;
+    const scale = (baseScale * (0.85 + (1 - Math.abs(t)) * 0.5)).toFixed(2);
+    placeLeaf(g, cx + xOff, cy + yOff, angle.toFixed(1), scale, i);
+  }
+}
+function buildStemLeaves(g, stem, angleOffset, colorStart) {
+  if (!stem) return;
+  const len = stem.getTotalLength();
+  const count = parseInt(g.dataset.count || 6, 10);
+  const baseScale = parseFloat(g.dataset.scale || 0.85);
+  for (let i = 0; i < count; i++) {
+    const frac = (i + 1) / (count + 1);
+    const pt = stem.getPointAtLength(len * frac);
+    const pt2 = stem.getPointAtLength(Math.min(len, len * frac + 1));
+    const tangentAngle = Math.atan2(pt2.y - pt.y, pt2.x - pt.x) * 180 / Math.PI;
+    const side = i % 2 === 0 ? 1 : -1;
+    const leafAngle = tangentAngle + side * angleOffset;
+    const scale = (baseScale * (1 - frac * 0.35)).toFixed(2);
+    placeLeaf(g, pt.x, pt.y, leafAngle.toFixed(1), scale, colorStart + i);
+  }
+}
+function buildHangingPlants() {
+  document.querySelectorAll('.leaf-cluster').forEach(buildLeafCluster);
+  document.querySelectorAll('.vine-leaves').forEach((g) => {
+    buildStemLeaves(g, g.parentElement.querySelector('.vine-stem'), 100, 2);
+  });
+  document.querySelectorAll('.cake-vine').forEach((svgEl) => {
+    const g = svgEl.querySelector('.corner-vine-leaves');
+    const stem = svgEl.querySelector('.corner-vine-stem');
+    if (g && stem) buildStemLeaves(g, stem, 95, 1);
+  });
+}
+buildHangingPlants();
+
+/* ---------------- SURAT: carousel berlembar-lembar, efek kertas dibolak-balik ---------------- */
+(function initMessageCarousel() {
+  const dataEl = document.getElementById('messagesData');
+  const textEl = document.getElementById('messageText');
+  const fromEl = document.getElementById('messageFrom');
+  const pageEl = document.getElementById('messagePage');
+  const dotsEl = document.getElementById('msgDots');
+  const prevBtn = document.getElementById('msgPrev');
+  const nextBtn = document.getElementById('msgNext');
+  if (!dataEl || !textEl || !fromEl || !pageEl || !dotsEl) return;
+
+  let messages = [];
+  try { messages = JSON.parse(dataEl.textContent); } catch (e) { messages = []; }
+  if (!messages.length) return;
+
+  let idx = 0;
+  let flipping = false;
+
+  messages.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'msg-dot' + (i === 0 ? ' is-active' : '');
+    dot.type = 'button';
+    dot.setAttribute('aria-label', 'Lihat ucapan ' + (i + 1));
+    dot.addEventListener('click', () => goTo(i, i > idx ? 1 : -1));
+    dotsEl.appendChild(dot);
+  });
+
+  function render() {
+    const m = messages[idx];
+    textEl.textContent = m.text;
+    fromEl.textContent = m.from;
+    dotsEl.querySelectorAll('.msg-dot').forEach((d, i) => d.classList.toggle('is-active', i === idx));
+  }
+
+  /* Halaman "dibalik" kayak kertas beneran: lembar lama muter ke satu sisi
+     lalu ganti isi pas rata (90deg), terus lembar baru muter masuk dari
+     sisi berlawanan sambil sedikit gelap di titik lipatannya. */
+  function goTo(next, dir = 1) {
+    next = (next + messages.length) % messages.length;
+    if (next === idx || flipping) return;
+    flipping = true;
+    const outOrigin = dir === 1 ? 'right center' : 'left center';
+    const inOrigin = dir === 1 ? 'left center' : 'right center';
+    const tl = gsap.timeline({ onComplete: () => { flipping = false; } });
+    tl.to(pageEl, {
+      rotateY: dir * -92, opacity: 0, filter: 'brightness(0.75)',
+      duration: 0.3, ease: 'power2.in', transformOrigin: outOrigin
+    })
+      .add(() => { idx = next; render(); })
+      .set(pageEl, { rotateY: dir * 92, filter: 'brightness(0.75)', transformOrigin: inOrigin })
+      .to(pageEl, { rotateY: 0, opacity: 1, filter: 'brightness(1)', duration: 0.4, ease: 'power2.out' });
+  }
+
+  if (prevBtn) prevBtn.addEventListener('click', () => goTo(idx - 1, -1));
+  if (nextBtn) nextBtn.addEventListener('click', () => goTo(idx + 1, 1));
+
+  render();
+})();
+
+
+/* ---------------- MAKE A WISH: surat wishlist tersegel sampai 23 Agustus 2027 ---------------- */
+(function initWishBox() {
+  const openBtn = document.getElementById('wishOpenBtn');
+  const overlay = document.getElementById('wishOverlay');
+  const closeBtn = document.getElementById('wishCloseBtn');
+  const stateForm = document.getElementById('wishStateForm');
+  const statePastUnlock = document.getElementById('wishStatePastUnlock');
+  const textarea = document.getElementById('wishTextarea');
+  const submitBtn = document.getElementById('wishSubmitBtn');
+  const miniList = document.getElementById('wishMiniList');
+  const goToMailboxBtn = document.getElementById('wishGoToMailboxBtn');
+  if (!openBtn || !overlay) return;
+
+  const UNLOCK_DATE = new Date('2027-08-23T00:00:00');
+  const STORAGE_KEY = 'birthdayWishList';
+  const OLD_STORAGE_KEY = 'birthdayWish';
+
+  function getWishList() {
+    let list = null;
+    try { list = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) { list = null; }
+    if (Array.isArray(list)) return list;
+    // migrasi dari format lama (satu wish doang, sebelum jadi list)
+    try {
+      const old = JSON.parse(localStorage.getItem(OLD_STORAGE_KEY));
+      if (old && old.text) {
+        const migrated = [{ id: 'w' + Date.now(), text: old.text, sealedAt: old.sealedAt || new Date().toISOString(), checked: false }];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+        return migrated;
+      }
+    } catch (e) {}
+    return [];
+  }
+  function saveWishList(list) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }
+
+  function renderMiniList() {
+    const list = getWishList();
+    miniList.innerHTML = '';
+    if (!list.length) {
+      miniList.innerHTML = '<div class="wish-mini-empty">Belum ada wish yang ditambahin.</div>';
+      return;
+    }
+    const chip = document.createElement('div');
+    chip.className = 'wish-mini-chip';
+    chip.textContent = '🔒 ' + list.length + ' wish tersegel';
+    miniList.appendChild(chip);
+  }
+
+  function renderState() {
+    if (new Date() >= UNLOCK_DATE) {
+      stateForm.style.display = 'none';
+      statePastUnlock.style.display = 'block';
+    } else {
+      stateForm.style.display = 'block';
+      statePastUnlock.style.display = 'none';
+      renderMiniList();
+    }
+  }
+
+  function openModal() {
+    renderState();
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  openBtn.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeModal();
+  });
+
+  submitBtn.addEventListener('click', () => {
+    const text = textarea.value.trim();
+    if (!text) {
+      gsap.fromTo(textarea, { x: -6 }, { x: 0, duration: 0.45, ease: 'elastic.out(1,0.3)' });
+      textarea.focus();
+      return;
+    }
+    const list = getWishList();
+    list.push({ id: 'w' + Date.now(), text, sealedAt: new Date().toISOString(), checked: false });
+    saveWishList(list);
+    textarea.value = '';
+    renderMiniList();
+    gsap.fromTo('#wishMiniList', { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.35, ease: 'back.out(1.8)' });
+  });
+
+  if (goToMailboxBtn) {
+    goToMailboxBtn.addEventListener('click', () => {
+      closeModal();
+      const mailboxBtn = document.getElementById('mailboxOpenBtn');
+      if (mailboxBtn) mailboxBtn.click();
+    });
+  }
+})();
+
+/* ---------------- KOTAK SURAT: arsip semua surat ucapan + status wishlist ---------------- */
+(function initMailboxArchive() {
+  const openBtn = document.getElementById('mailboxOpenBtn');
+  const overlay = document.getElementById('mailboxOverlay');
+  const closeBtn = document.getElementById('mailboxCloseBtn');
+  const tabLetters = document.getElementById('mailboxTabLetters');
+  const tabWishes = document.getElementById('mailboxTabWishes');
+  const panelLetters = document.getElementById('mailboxPanelLetters');
+  const panelWishes = document.getElementById('mailboxPanelWishes');
+  const letterList = document.getElementById('mailboxLetterList');
+  const wishList = document.getElementById('mailboxWishList');
+  if (!openBtn || !overlay) return;
+
+  const UNLOCK_DATE = new Date('2027-08-23T00:00:00');
+  const STORAGE_KEY = 'birthdayWishList';
+  const OLD_STORAGE_KEY = 'birthdayWish';
+
+  function getWishList() {
+    let list = null;
+    try { list = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) { list = null; }
+    if (Array.isArray(list)) return list;
+    try {
+      const old = JSON.parse(localStorage.getItem(OLD_STORAGE_KEY));
+      if (old && old.text) {
+        const migrated = [{ id: 'w' + Date.now(), text: old.text, sealedAt: old.sealedAt || new Date().toISOString(), checked: false }];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+        return migrated;
+      }
+    } catch (e) {}
+    return [];
+  }
+  function saveWishList(list) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }
+
+  function renderLetters() {
+    let messages = [];
+    const dataEl = document.getElementById('messagesData');
+    try { messages = JSON.parse(dataEl.textContent); } catch (e) { messages = []; }
+    letterList.innerHTML = '';
+    if (!messages.length) {
+      letterList.innerHTML = '<div class="mailbox-empty">Belum ada surat ucapan.</div>';
+      return;
+    }
+    messages.forEach((m) => {
+      const item = document.createElement('div');
+      item.className = 'mailbox-item';
+      item.innerHTML = '<div class="mailbox-item-text"></div><div class="mailbox-item-from"></div>';
+      item.querySelector('.mailbox-item-text').textContent = m.text;
+      item.querySelector('.mailbox-item-from').textContent = '— ' + m.from;
+      letterList.appendChild(item);
+    });
+  }
+
+  function renderWishes() {
+    const list = getWishList();
+    wishList.innerHTML = '';
+    if (!list.length) {
+      wishList.innerHTML = '<div class="mailbox-empty">Belum ada wish yang ditambahin. Yuk buat lewat tombol "Make a Wish"! 🌠</div>';
+      return;
+    }
+    if (new Date() >= UNLOCK_DATE) {
+      list.forEach((w) => {
+        const item = document.createElement('div');
+        item.className = 'mailbox-wish-item' + (w.checked ? ' is-checked' : '');
+        const cbId = 'wcb-' + w.id;
+        item.innerHTML =
+          '<input type="checkbox" id="' + cbId + '"' + (w.checked ? ' checked' : '') + '>' +
+          '<label for="' + cbId + '"></label>';
+        item.querySelector('label').textContent = w.text;
+        item.querySelector('input').addEventListener('change', (e) => {
+          const current = getWishList();
+          const target = current.find((x) => x.id === w.id);
+          if (target) target.checked = e.target.checked;
+          saveWishList(current);
+          item.classList.toggle('is-checked', e.target.checked);
+        });
+        wishList.appendChild(item);
+      });
+    } else {
+      const item = document.createElement('div');
+      item.className = 'mailbox-item is-locked';
+      item.innerHTML = '<span>🔒</span><span>' + list.length + ' wish tersegel, kebuka 23 Agustus 2027</span>';
+      wishList.appendChild(item);
+    }
+  }
+
+  function switchTab(which) {
+    const lettersActive = which === 'letters';
+    tabLetters.classList.toggle('is-active', lettersActive);
+    tabWishes.classList.toggle('is-active', !lettersActive);
+    panelLetters.classList.toggle('is-active', lettersActive);
+    panelWishes.classList.toggle('is-active', !lettersActive);
+  }
+
+  function openModal() {
+    renderLetters();
+    renderWishes();
+    switchTab('letters');
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  openBtn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeModal();
+  });
+  tabLetters.addEventListener('click', () => switchTab('letters'));
+  tabWishes.addEventListener('click', () => switchTab('wishes'));
+})();
+
+/* ---------------- JOKE: TOMBOL UNLOCK ---------------- */
+const unlockBtn = document.getElementById('unlock-btn');
+const unlockNote = document.getElementById('unlock-note');
+if (unlockBtn && unlockNote) {
+  unlockBtn.addEventListener('click', () => {
+    gsap.fromTo(unlockBtn, { rotate: 0 },
+      { rotate: -3, duration: 0.08, yoyo: true, repeat: 5, ease: 'power1.inOut', onComplete: () => gsap.set(unlockBtn, { rotate: 0 }) });
+    gsap.killTweensOf(unlockNote);
+    gsap.fromTo(unlockNote, { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.4, ease: 'back.out(1.8)' });
+    gsap.delayedCall(2.8, () => gsap.to(unlockNote, { opacity: 0, x: 60, duration: 0.3, ease: 'power2.in' }));
+  });
+}
+
+/* ---------------- MUSIK LATAR ---------------- */
+const music = document.getElementById('bg-music');
+const musicBtn = document.getElementById('music-toggle');
+const musicHint = document.getElementById('music-hint');
+let musicStarted = false;
+function playMusic() {
+  music.volume = 0.55;
+  music.play().then(() => { musicBtn.classList.add('is-playing'); musicStarted = true; })
+    .catch(() => { musicBtn.classList.remove('is-playing'); });
+}
+function pauseMusic() { music.pause(); musicBtn.classList.remove('is-playing'); }
+musicBtn.addEventListener('click', () => {
+  if (music.paused) playMusic(); else pauseMusic();
+  gsap.to(musicHint, { opacity: 0, duration: 0.3 });
+});
+gsap.delayedCall(2.2, () => {
+  if (!musicStarted) {
+    gsap.to(musicHint, { opacity: 1, duration: 0.4 });
+    gsap.delayedCall(5, () => gsap.to(musicHint, { opacity: 0, duration: 0.5 }));
+  }
+});
+introTl.eventCallback('onStart', () => { playMusic(); });
+
+/* ---------------- FOOTER ---------------- */
+const footerYearEl = document.getElementById('footer-year');
+if (footerYearEl) footerYearEl.textContent = new Date().getFullYear();
+document.getElementById('back-to-top').addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+/* ---------------- FOOTER HIJAU: scroll reveal ---------------- */
+gsap.set('.ftg-headline', { opacity: 0, scale: 0 });
+gsap.set('.ftg-cta', { opacity: 0, y: 30 });
+gsap.set('.ftg-eye', { scale: 0 });
+
+ScrollTrigger.create({
+  trigger: 'footer',
+  start: 'top 80%',
+  once: true,
+  onEnter: () => {
+    gsap.to('.ftg-headline', { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(3)' });
+    gsap.to('.ftg-cta', { opacity: 1, y: 0, duration: 0.55, ease: 'back.out(1.6)', delay: 0.15 });
+    gsap.to('.ftg-eye', { scale: 1, duration: 0.4, stagger: 0.1, ease: 'back.out(3)', delay: 0.2 });
+  }
+});
+</script>
+</body>
+</html>
