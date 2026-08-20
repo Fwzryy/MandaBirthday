@@ -278,7 +278,7 @@
     .ftg-headline span{
     font-family:'Archivo Black';
     color:var(--ink);
-    font-size:65px;
+    font-size:90px;
     line-height:1.02;
     max-width:760px;
     display:flex; flex-wrap:wrap; align-items:center; gap:6px 18px;
@@ -541,7 +541,7 @@
     height: 200px;
     box-shadow:8px 10px 0 var(--ink);
     padding:20px 14px 18px;
-    width:clamp(240px,15vw,168px);
+    width:clamp(168px,15vw,240px);
     text-align:left;
     position:relative;
     margin-left:-26px;
@@ -564,7 +564,7 @@
   }
   .clock .val{
     font-family:'Archivo Black';
-    font-size:clamp(70px,4.6vw,46px);
+     font-size:clamp(46px,4.6vw,70px);  
     line-height:1;
   }
   .clock .lbl{
@@ -576,10 +576,18 @@
     font-weight:700;
   }
   @media (max-width:640px){
-    .clock{ gap:0; }
-    .clock .unit{ width:clamp(96px,26vw,120px); margin-left:-18px; padding:16px 10px 14px; }
-    .clock .unit-badge{ width:30px; height:30px; font-size:13px; margin-bottom:10px; }
+  .clock{ gap:20px; padding:6px 0 24px; }
+  .clock .unit{
+    width:84px;
+    height:152px;
+    margin-left:-16px;
+    padding:12px 8px 10px;
   }
+  .clock .unit-badge{ width:26px; height:26px; font-size:13px; margin-bottom:8px; }
+  .clock .val{ font-size:28px; }
+  .clock .lbl{ font-size:11px; margin-top:6px; letter-spacing:0.08em; }
+  #countdown .cd-sub {font-size:clamp(20px,1.6vw,20px);}
+}
 
   /* ---------- MESSAGE ---------- */
   #message{ background:var(--sunshine); border-bottom:3px solid var(--ink); position:relative; overflow:hidden; }
@@ -592,18 +600,18 @@
   .m-shape-inner{ width:100%; height:100%; }
   .m-shape img{ width:100%; height:100%; object-fit:contain; }
   .m-shape .shape-fallback{ width:150px; height:150px; }
-  .ms-1{ top:8%; left:15%; width:64px; animation:shape-float 5s ease-in-out infinite; }
-  .ms-2{ top:14%; right:18%; width:46px; animation:shape-float 4.2s ease-in-out infinite 0.3s; }
-  .ms-3{ bottom:20%; left:17%; width:50px; animation:shape-float 4.7s ease-in-out infinite 0.6s; }
-  .ms-4{ bottom:20%; right:22%; width:60px; animation:shape-float 5.4s ease-in-out infinite 0.2s; }
-  .ms-5{ top:44%; left:10%; width:40px; animation:shape-float 4.4s ease-in-out infinite 0.9s; }
-  .ms-6{ top:43%; right:13%; width:40px; animation:shape-float 5.1s ease-in-out infinite 0.5s; }
+  .ms-1{ top:-6%; left:2%; width:460px; height: 460px; animation:shape-float 5s ease-in-out infinite; }
+  .ms-2{ top:-6%; right:6%; width:400px; height:400px; animation:shape-float 4.2s ease-in-out infinite 0.3s; }
+  .ms-3{ bottom:10%; left:13%; width:250px; height: 250px; animation:shape-float 4.7s ease-in-out infinite 0.6s; }
+  .ms-4{ bottom:20%; right:10%; width:200px; height: 200px; animation:shape-float 5.4s ease-in-out infinite 0.2s; }
+  .ms-5{ top:35%; left:3%; width:240px; height: 240px; animation:shape-float 4.4s ease-in-out infinite 0.9s; }
+  .ms-6{ top:27%; right:3%; width:300px; height: 300px; animation:shape-float 5.1s ease-in-out infinite 0.5s; }
   @keyframes shape-float{
     0%,100%{ transform:translateY(0) rotate(0deg); }
     50%{ transform:translateY(-12px) rotate(8deg); }
   }
   @media (max-width:760px){
-    .ms-5, .ms-6{ display:none; }
+    .ms-2, .ms-3,.ms-4,.ms-5, .ms-6{ display:none; }
   }
 
   .message-stack{
@@ -1031,8 +1039,8 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
 
   @media (max-width:560px){
     .ftg-hero{ flex-direction:column; align-items:flex-start; }
-    .ftg-cta{ margin-top:10px;width:400px; right: 5%; }
-    .ftg-mailbox{ margin-top:10px; width: 400px; right: 5%;}
+    .ftg-cta{align-self: center; margin-top:10px;width:400px; right: 5%; }
+    .ftg-mailbox{align-self: center; margin-top:10px; width: 400px; right: 5%;}
     .ftg-mailbox-label{
       font-size: 20px;
     }
@@ -1045,6 +1053,12 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
       font-size: 30px;
     }
     
+    .ftg-headline span{
+      font-size: 65px;
+    }
+     .hero-title {
+      font-size:clamp(40px,6.2vw,74px);
+     }
   }
 
   /* ---------- MODAL: MAKE A WISH (surat wishlist tersegel) ---------- */
@@ -1570,37 +1584,37 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
   <div class="message-shapes" aria-hidden="true">
     <div class="m-shape ms-1">
       <div class="m-shape-inner">
-        <img src="images/shape-1.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <img src="images/m-shape-1.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
         <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><path d="M30 4l6 18h19l-15 11 6 18-16-11-16 11 6-18-15-11h19z" fill="var(--grape)" stroke="#111" stroke-width="3" stroke-linejoin="round"/></svg>
       </div>
     </div>
     <div class="m-shape ms-2">
       <div class="m-shape-inner">
-        <img src="images/shape-2.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <img src="images/m-shape-2.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
         <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><circle cx="30" cy="30" r="24" fill="var(--coral)" stroke="#111" stroke-width="3"/></svg>
       </div>
     </div>
     <div class="m-shape ms-3">
       <div class="m-shape-inner">
-        <img src="images/shape-3.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <img src="images/m-shape-3.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
         <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><rect x="8" y="8" width="44" height="44" rx="10" fill="var(--sky)" stroke="#111" stroke-width="3" transform="rotate(12 30 30)"/></svg>
       </div>
     </div>
     <div class="m-shape ms-4">
       <div class="m-shape-inner">
-        <img src="images/shape-4.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <img src="images/m-shape-4.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
         <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><path d="M30 6c8 10 18 16 18 27a18 18 0 01-36 0c0-11 10-17 18-27z" fill="var(--mint)" stroke="#111" stroke-width="3"/></svg>
       </div>
     </div>
     <div class="m-shape ms-5">
       <div class="m-shape-inner">
-        <img src="images/shape-5.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <img src="images/m-shape-5.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
         <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><path d="M6 30c8-14 16 14 24 0s16 14 24 0" stroke="#111" stroke-width="4" stroke-linecap="round" fill="none"/></svg>
       </div>
     </div>
     <div class="m-shape ms-6">
       <div class="m-shape-inner">
-        <img src="images/shape-6.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <img src="images/m-shape-6.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
         <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><rect x="6" y="26" width="48" height="8" fill="var(--bubblegum)" stroke="#111" stroke-width="3" transform="rotate(-8 30 30)"/></svg>
       </div>
     </div>
@@ -1782,7 +1796,6 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
       <div class="wish-state" id="wishStateForm">
         <div class="wish-envelope-art" aria-hidden="true">
           <img src="images/wish-envelope.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="placeholder" style="display:none;"><div class="num">✉️</div><div class="hint">images/wish-envelope.png<br>(desain kotak surat/amplop)</div></div>
         </div>
         <h3 id="wishTitle" class="wish-title">Tambahin wishlist buat setahun ke depan</h3>
         <p class="wish-sub">Bisa nambah kapan aja &amp; bertahap sampai <strong>23 Agustus 2027</strong> — nanti pas dibuka, tinggal centang mana yang udah kejadian ✅</p>
