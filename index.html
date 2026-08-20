@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Selamat Ulang Tahun</title>
+<title>Amanda's Birthday</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -262,9 +262,34 @@
   .hs-5{ top:-18%; right:-3%; width:238px; animation:shape-float 4.5s ease-in-out infinite 0.8s; }
   .hs-6{ bottom:34%; right:-1.7%; width:254px; animation:shape-float 5s ease-in-out infinite 0.5s; }
   .hs-7{ top:46%; right:32%; width:30px; animation:shape-float 4.2s ease-in-out infinite 1s; }
+
   @media (max-width:900px){
-    .hs-3, .hs-4, .hs-7{ display:none; }
+    .hs-7, .hs-6, .hero-hang-plant, .hang-plant-inner{ display:none; }
+    .hs-2{ top:7%; left:75%; width:90px; animation:shape-float 4.3s ease-in-out infinite 0.3s; }
+    .hs-1{ top:3%; left:5%; width:90px; animation:shape-float 5s ease-in-out infinite; }
+    .hs-5{ top:-14.5%; right:-4%; width:208px; animation:shape-float 4.5s ease-in-out infinite 0.8s; }
+    .hero-stage {top: -7%;}
+    .hs-3{ top:38%; left:-3%; width:140px; animation:shape-float 4.8s ease-in-out infinite 0.6s; }
+    .hs-4{ bottom:55%; left:75%; width:80px; animation:shape-float 5.4s ease-in-out infinite 0.2s; }
+
+    }
+
+    /* footer */
+    .ftg-headline span{
+    font-family:'Archivo Black';
+    color:var(--ink);
+    font-size:65px;
+    line-height:1.02;
+    max-width:760px;
+    display:flex; flex-wrap:wrap; align-items:center; gap:6px 18px;
+    }
+    .ftg-mailbox{
+    position:relative; flex:none;
+    width:clamp(126px,12.5vw,168px);
+    background:none; border:none; padding:0; font:inherit; cursor:pointer;
+    text-align:center;
   }
+  
   .hero-grid{
     display:grid;
     grid-template-columns:1.05fr 0.95fr;
@@ -409,7 +434,8 @@
 
   @media (max-width:900px){
     .hero-grid{ grid-template-columns:1fr; text-align:center; }
-    .hero-sub{ margin-left:auto; margin-right:auto; }
+    .hero-title {font-size: 50px;}
+    .hero-sub{ margin-left:auto; margin-right:auto; font-size: 20px; }
     .hero-cta-row{ justify-content:center; }
     .hero-stage{ margin-top:20px; }
     .st-1{ left:0%; }
@@ -1005,8 +1031,20 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
 
   @media (max-width:560px){
     .ftg-hero{ flex-direction:column; align-items:flex-start; }
-    .ftg-cta{ align-self:center; margin-top:10px; }
-    .ftg-mailbox{ align-self:center; margin-top:10px; }
+    .ftg-cta{ margin-top:10px;width:400px; right: 5%; }
+    .ftg-mailbox{ margin-top:10px; width: 400px; right: 5%;}
+    .ftg-mailbox-label{
+      font-size: 20px;
+    }
+    .ftg-mailbox-art img{ width:100%; height:100%; object-fit:contain; }
+    .wt-1, .wt-2 {
+      display: none;
+    }
+
+    .ticker-track-footer span {
+      font-size: 30px;
+    }
+    
   }
 
   /* ---------- MODAL: MAKE A WISH (surat wishlist tersegel) ---------- */
@@ -1241,7 +1279,7 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
   .footer-top:hover{ transform:translate(-2px,-2px); background:rgba(255,244,227,0.08); }
   .footer-top:active{ transform:translate(2px,2px); }
 
-  /* Ilustrasi kosong di tengah footer, ngisi ruang antara "Untuk @..."
+  /* Ilustrasi kosong di tengah footer, ngisi ruang antara "Untuk @..."f
      sama link Jelajah/Dari — EDIT: taruh gambar di
      images/footer-illustration.png */
   .ftg-illustration{
@@ -1392,7 +1430,7 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
   <div class="hero-grid">
     <div class="hero-copy">
       <div class="eyebrow-wrap">
-        <div class="chip eyebrow">✦ 23 Agustus 2026 | AMANDA'S SPECIAL DAY</div>
+        <div class="chip eyebrow">✦ 23 Agustus 2026</div>
        
       </div>
       <!-- EDIT: ganti nama & headline -->
@@ -1592,7 +1630,7 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
   <script id="messagesData" type="application/json">
   [
     { "text": "Terima kasih sudah bertahan melewati hari-hari yang berat, fase-fase bingung, dan proses panjang yang nggak mudah. Kalau bukan karena ketangguhanmu di masa lalu, Amanda hari ini nggak akan sekeren dan sehebat sekarang.", "from": "— Dari Amanda yang Dulu, dengan Bangga" },
-    { "text": "Hari ini giliranmu yang jadi pusat semesta. Nikmati setiap tawa, apresiasi setiap hal kecil yang sudah kamu capai, dan ingatlah kalau kehadiranmu selalu memberi energi hangat buat orang-orang di sekitarmu.", "from": "Dari Amanda Hari Ini, yang Sedang Dirayakan" },
+    { "text": "Hari ini giliranmu yang jadi pusat semesta. Nikmati setiap tawa, apresiasi setiap hal kecil yang sudah kamu capai, dan ingatlah kalau kehadiranmu selalu memberi energi hangat buat orang-orang di sekitarmu.ㅤㅤㅤ", "from": "Dari Amanda Hari Ini, yang Sedang Dirayakan" },
     { "text": "Melangkahlah ke umur yang baru dengan kepala tegak. Di depan sana, ada banyak cerita seru, mimpi-mimpi yang siap terwujud, dan bahagia yang sudah menunggu untuk kamu jemput. Kamu pasti bisa melaluinya!", "from": "— Dari Amanda di Masa Depan, yang Menunggumu" }
   ]
   </script>
@@ -1703,13 +1741,19 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
 <footer class="ftg-footer" id="footer">
   <div class="ftg-hero">
     <!-- EDIT: kalimat penutup -->
-    <h2 class="ftg-headline">2026 * THANK YOU FOR
-      <span class="ftg-eyes">
+    <h2 class="ftg-headline">
+      <span class="ftg-word">2026</span>
+      <span class="ftg-word">*</span>
+      <span class="ftg-word">THANK</span>
+      <span class="ftg-word">YOU</span>
+      <span class="ftg-word">FOR</span>
+      <span class="ftg-word ftg-eyes">
         <span class="ftg-eye"></span>
         <span class="ftg-eye"></span>
         <span style="color: var(--grape); -webkit-text-stroke-width: 3px;
   -webkit-text-stroke-color: rgb(0, 0, 0);">ALWAYS</span></span>
-      BEING YOURSELF
+      <span class="ftg-word">BEING</span>
+      <span class="ftg-word">YOURSELF</span>
   </h2>
     <button type="button" class="ftg-mailbox" id="mailboxOpenBtn" aria-label="Buka kotak surat">
       <div class="ftg-mailbox-card">
@@ -1823,8 +1867,8 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
     <!-- Ilustrasi tengah footer — EDIT: taruh gambar di images/footer-illustration.png -->
     <div class="ftg-illustration" aria-hidden="true">
       <img src="images/footer-illustration.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-      <div class="placeholder" style="display:none;"><div class="num">🎨</div><div class="hint">images/footer-illustration.png</div></div>
     </div>
+
 
     <div class="ftg-col">
       <div class="ftg-col-title">Jelajah</div>
@@ -1842,7 +1886,7 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
     </div>
   </div>
 
-  <div class="footer-credit">Dibuat dengan sepenuh hati &mdash; template ulang tahun &nbsp;·&nbsp; <span id="footer-year"></span></div>
+  <div class="footer-credit">Selamat Ulang Tahun yang ke-22  &nbsp;·&nbsp; 23 AGUSTUS &nbsp;·&nbsp; <span id="footer-year"></span></div>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -2418,7 +2462,7 @@ const musicBtn = document.getElementById('music-toggle');
 const musicHint = document.getElementById('music-hint');
 let musicStarted = false;
 function playMusic() {
-  music.volume = 0.55;
+  music.volume = 0.15;
   music.play().then(() => { musicBtn.classList.add('is-playing'); musicStarted = true; })
     .catch(() => { musicBtn.classList.remove('is-playing'); });
 }
@@ -2443,7 +2487,7 @@ document.getElementById('back-to-top').addEventListener('click', () => {
 });
 
 /* ---------------- FOOTER HIJAU: scroll reveal ---------------- */
-gsap.set('.ftg-headline', { opacity: 0, scale: 0 });
+gsap.set('.ftg-word', { opacity: 0, scale: 0 });
 gsap.set('.ftg-cta', { opacity: 0, y: 30 });
 gsap.set('.ftg-eye', { scale: 0 });
 
@@ -2452,9 +2496,9 @@ ScrollTrigger.create({
   start: 'top 80%',
   once: true,
   onEnter: () => {
-    gsap.to('.ftg-headline', { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(3)' });
+    gsap.to('.ftg-word', { opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(3)', stagger: 0.16 });
     gsap.to('.ftg-cta', { opacity: 1, y: 0, duration: 0.55, ease: 'back.out(1.6)', delay: 0.15 });
-    gsap.to('.ftg-eye', { scale: 1, duration: 0.4, stagger: 0.1, ease: 'back.out(3)', delay: 0.2 });
+    gsap.to('.ftg-eye', { scale: 1, duration: 0.4, stagger: 0.1, ease: 'back.out(3)', delay: 0.95 });
   }
 });
 </script>
