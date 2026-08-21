@@ -37,9 +37,25 @@
     font-family:'Space Grotesk', sans-serif;
     overflow-x:hidden;
     line-height:1.4;
+    cursor:url('images/cursor-default.png') 4 4, auto;
   }
   a, button{ font-family:inherit; }
   ::selection{ background:var(--sunshine); color:var(--ink); }
+
+  /* ---- Custom cursor ala neobrutalism ----
+     EDIT: taruh 2 gambar cursor kamu di sini:
+     - images/cursor-default.png -> cursor biasa (dipakai di seluruh halaman)
+     - images/cursor-pointer.png -> cursor pas nunjuk ke tombol/link/hal yang bisa diklik
+     Format PNG background transparan, ukuran kecil aja (misal 32x32 atau 48x48px).
+     Angka "4 4" / "6 2" itu titik "hotspot" cursor (posisi ujung kursor yang
+     dianggap titik klik) — geser2 aja kalau posisinya berasa meleset.
+     Kalau file belum ada / gagal dimuat, browser otomatis balik ke cursor
+     bawaan (auto/pointer), jadi aman kalau belum sempat pasang asetnya. */
+  a, button, .brut-btn, .ftg-cta, .ftg-mailbox, .g-photo, .msg-nav-btn,
+  .unlock-btn, .candle-btn, #music-toggle, .footer-top, #wishOpenBtn, .wish-close,
+  .fab, label, select, [role="button"], [onclick]{
+    cursor:url('images/cursor-pointer.png') 6 2, pointer !important;
+  }
 
   img{ max-width:100%; display:block; }
 
@@ -380,18 +396,22 @@
   /* selotip washi di dua sudut atas foto */
   .washi-tape{
     position:absolute;
-    width:94px; height:36px;
+    width:214px; height:80px;
     z-index:4;
     border:2px solid var(--ink);
     opacity:0.92;
   }
   .wt-1{
-    top:190px; left:190%; transform:rotate(19deg);
-    background:repeating-linear-gradient(45deg, var(--sunshine), var(--sunshine) 6px, #FFB300 6px, #FFB300 12px);
+    top:40px; left:80.8%; transform:rotate(-2deg);
+    background:repeating-linear-gradient(45deg, var(--sunshine), var(--sunshine) 6px, #FFB300 6px, #FFB300 12px);opacity: 35%;
+    z-index: -100;
+    
   }
   .wt-2{
-    top:190px; right:95%; transform:rotate(-56deg);
-    background:repeating-linear-gradient(45deg, var(--sky), var(--sky) 6px, #2FA0E0 6px, #2FA0E0 12px);
+    top:100px; right:85.7%; transform:rotate(2deg);
+    width: 190px; height: 60px;
+    background:repeating-linear-gradient(45deg, var(--sky), var(--sky) 6px, #2FA0E0 6px, #2FA0E0 12px); opacity: 35%;
+    z-index: -100;
   }
   .hero-photo-card{
     position:relative;
@@ -540,6 +560,11 @@
   }
   @media (max-width:560px){
     .gallery-grid{ grid-template-columns:1fr; gap:26px; max-width:340px; margin:0 auto; }
+    .section-head{ max-width:640px; margin-bottom:50px; }
+    .section-head h2{
+    font-family:'Archivo Black';
+    font-size:clamp(32px,4.4vw,50px);
+  }
   }
 
   /* ---------- COUNTDOWN ---------- */
@@ -560,6 +585,34 @@
     font-family:'Space Grotesk', sans-serif;
     font-size:clamp(24px,1.6vw,24px);
     opacity:0.92;
+  }
+
+  .cd-deco{
+    position:absolute;
+    width:clamp(400px,7vw,110px);
+    z-index:1;
+    pointer-events:none;
+    animation:shape-float 5s ease-in-out infinite;
+  }
+  .deco-2 {
+    top: -550px;
+    left: 1100px;
+    animation:shape-float-2 5s ease-in-out infinite;
+    width:clamp(700px,7vw,110px);
+  }
+  .cd-deco img{ width:100%; height:100%; object-fit:contain; display:block; }
+  .cd-deco .placeholder{
+    width:100%; height:100%;
+    border:3px dashed rgba(255,244,227,0.5);
+    border-radius:16px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    color:var(--cream);
+  }
+  .cd-deco .placeholder .num{ font-size:24px; }
+  .cd-deco .placeholder .hint{ font-family:'Space Mono',monospace; font-size:8px; letter-spacing:0.03em; opacity:0.75; margin-top:4px; text-align:center; padding:0 6px; line-height:1.3; }
+  @media (max-width:640px){
+    /* disembunyiin di HP biar ga sempit/nabrak judul yang udah dipas-in */
+    .cd-deco{ display:none; }
   }
   .clock{
     margin-top:64px;
@@ -668,6 +721,10 @@
   @keyframes shape-float{
     0%,100%{ transform:translateY(0) rotate(0deg); }
     50%{ transform:translateY(-12px) rotate(8deg); }
+  }
+  @keyframes shape-float-2{
+    0%,100%{ transform:translateY(0) rotate(0deg); }
+    50%{ transform:translateY(12px) rotate(-8deg); }
   }
   @media (max-width:760px){
     .ms-2, .ms-3,.ms-4,.ms-5, .ms-6{ display:none; }
@@ -1051,7 +1108,7 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
   .ftg-cta::before{
     content:'';
     position:absolute; inset:10px -8px -8px 8px;
-    background:var(--lime-soft);
+    background:var(--neon-purple);
     border:4px solid var(--ink);
     border-radius:32px;
     z-index:1;
@@ -1072,7 +1129,7 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
   .ftg-cta-card:hover{ transform:translate(-2px,-3px); }
   .ftg-cta-art{ position:relative; width:66%; aspect-ratio:1/1; }
   .ftg-cta-art img{ width:100%; height:100%; object-fit:contain; }
-  .ftg-cta-label{ font-family:'Space Grotesk',sans-serif; font-weight:900; text-transform:uppercase; font-size:20px; letter-spacing:0.03em; color:red; line-height:1.3; }
+  .ftg-cta-label{ font-family:'Space Grotesk',sans-serif; font-weight:900; text-transform:uppercase; font-size:20px; letter-spacing:0.03em; color:rgb(175, 0, 0); line-height:1.3; }
 
   /* Kotak surat: ngisi ruang kosong di antara headline sama kartu "Make a
      Wish", pas dipencet buka arsip surat + wishlist.
@@ -1086,7 +1143,7 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
   .ftg-mailbox::before{
     content:'';
     position:absolute; inset:10px -8px -8px 8px;
-    background:var(--sunshine);
+    background:var(--grape);
     border:4px solid var(--ink);
     border-radius:32px;
     z-index:1;
@@ -1097,7 +1154,7 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
     gap:10px;
     width:100%;
     height: 310px;
-    background:pink;
+    background:rgb(255, 209, 217);
     border:4px solid var(--ink);
     border-radius:32px;
     padding:26px 12px;
@@ -1120,13 +1177,13 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
     .ftg-mailbox, .ftg-cta{ width:clamp(180px,15vw,240px); }
     .ftg-mailbox-card, .ftg-cta-card{ padding:34px 16px; border-radius:36px; }
     .ftg-mailbox::before, .ftg-cta::before{ inset:12px -10px -10px 10px; border-radius:36px; }
-    .ftg-mailbox-label, .ftg-cta-label{ font-size:15px; }
+    .ftg-mailbox-label, .ftg-cta-label{ font-size:20px; }
   }
 
   @media (max-width:560px){
     .ftg-hero{ flex-direction:column; align-items:flex-start; }
-    .ftg-cta{align-self: center; margin-top:10px; width:min(90%,360px); }
-    .ftg-mailbox{align-self: center; margin-top:10px; width:min(90%,360px);}
+    .ftg-cta{align-self:center; margin:10px auto 0; width:min(90%,360px); transform:translateX(-4px); }
+    .ftg-mailbox{align-self:center; margin:10px auto 0; width:min(90%,360px); transform:translateX(-4px);}
     .ftg-mailbox-label, .ftg-cta-label{
       font-size: 20px;
     }
@@ -1590,10 +1647,10 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
 
 <!-- ============ GALLERY ============ -->
 <section id="gallery">
-  <div class="section-head" data-reveal>
+  <div class="section-head" data-reveal style="max-width:min(100%,1280px);">
     <div class="chip">Kilas balik</div>
     <!-- EDIT: judul galeri -->
-    <h2>Ruang kecil untuk menyimpan semua momen favorit tentang kamu.</h2>
+    <h2>Ruang kecil untuk menyimpan semua <span style="color: #976213;">momen</span> <span style="color: #1e66a5;">favorit</span> tentang kamu.</h2>
      <div class="washi-tape wt-1" aria-hidden="true"></div>
       <div class="washi-tape wt-2" aria-hidden="true"></div>
   </div>
@@ -1629,7 +1686,7 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
     </div>
     <div class="g-card">
       <div class="g-photo">
-        <img src="images/foto-4.jpg" alt="Foto 4" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <img src="images/foto-4.jpeg" alt="Foto 4" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <video class="g-live-video" muted loop playsinline preload="metadata" src="images/foto-4-live.mp4"></video>
         <div class="g-live-badge" aria-hidden="true">LIVE</div>
       </div>
@@ -1660,11 +1717,21 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
 
 <!-- ============ COUNTDOWN ============ -->
 <section id="countdown" style="text-align:center;">
+  <!-- 2 aset shape dekorasi. Posisinya diatur langsung di "style" bawah ini:
+       - pakai salah satu dari "top" ATAU "bottom" (yang satunya hapus)
+       - pakai salah satu dari "left" ATAU "right" (yang satunya hapus)
+       Contoh sekarang: shape 1 nempel pojok kiri-atas, shape 2 pojok kanan-bawah. -->
+  <div class="cd-deco" style="top:6%; left:4%;" aria-hidden="true">
+    <img src="images/cd-shape-1.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+  </div>
+  <div class="cd-deco deco-2" style="bottom:8%; right:4%;" aria-hidden="true">
+    <img src="images/cd-shape-2.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+  </div>
   <div class="section-head" data-reveal style="margin-left:auto; margin-right:auto; text-align:center; max-width:820px;">
     <div class="chip">GOLDEN BIRTHDAY</div>
     <!-- EDIT: kalimat countdown -->
-    <h2 style="margin-left:auto; margin-right:auto;">ROAD TO 23 ON <br> AUGUST 23RD</h2>
-    <p class="cd-sub">Menghitung hari menuju usia 23 di tanggal 23. Semoga perjalanan menuju babak baru ini dipenuhi banyak cerita seru dan hal baik.</p>
+    <h2 style="margin-left:auto; margin-right:auto; color: var(--paper);">ROAD TO 23 ON <br> AUGUST 23RD</h2>
+    <p class="cd-sub" style="color: var(--paper);">Menghitung hari menuju usia 23 di tanggal 23. Semoga perjalanan menuju babak baru ini dipenuhi banyak cerita seru dan hal baik.</p>
   </div>
   <div class="clock">
     <div class="unit"><div class="unit-badge">⧗</div><div class="val" id="cd-days">00</div><div class="lbl">Hari</div></div>
@@ -1860,7 +1927,7 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
       <span class="ftg-word ftg-eyes">
         <span class="ftg-eye"></span>
         <span class="ftg-eye"></span>
-        <span style="color: var(--grape); -webkit-text-stroke-width: 1.5px;
+        <span style="color: var(--grape); -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: rgb(0, 0, 0);">ALWAYS</span></span>
       <span class="ftg-word">BEING</span>
       <span class="ftg-word">YOURSELF</span>
@@ -1871,7 +1938,7 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
           <img src="images/mailbox.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
           <div class="placeholder" style="display:none;"><div class="num">📬</div><div class="hint">images/mailbox.png</div></div>
         </div>
-        <div class="ftg-mailbox-label">Kotak<br>Surat</div>
+        <div class="ftg-mailbox-label"><br>Kotak<br>Surat</div>
       </div>
     </button>
 
