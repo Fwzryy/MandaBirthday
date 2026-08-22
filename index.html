@@ -612,7 +612,14 @@
   .cd-deco .placeholder .hint{ font-family:'Space Mono',monospace; font-size:8px; letter-spacing:0.03em; opacity:0.75; margin-top:4px; text-align:center; padding:0 6px; line-height:1.3; }
   @media (max-width:640px){
     /* disembunyiin di HP biar ga sempit/nabrak judul yang udah dipas-in */
-    .cd-deco{ display:none; }
+    .cd-deco{
+    width:clamp(100px,7vw,110px);
+  }
+  .deco-2 {
+    top: -700px;
+    left: 310px;
+    width:clamp(200px,7vw,110px);
+  }
   }
   .clock{
     margin-top:64px;
@@ -1046,8 +1053,8 @@
     padding:12px 24px;
     border:3px solid var(--ink);
     border-radius:14px;
-    background:var(--sky);
-    color:var(--ink);
+    background:#434dc6;
+    color:var(--paper);
     font-family:'Space Mono', monospace;
     font-weight:700;
     font-size:13px;
@@ -1808,7 +1815,7 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
        - pakai salah satu dari "top" ATAU "bottom" (yang satunya hapus)
        - pakai salah satu dari "left" ATAU "right" (yang satunya hapus)
        Contoh sekarang: shape 1 nempel pojok kiri-atas, shape 2 pojok kanan-bawah. -->
-  <div class="cd-deco" style="top:6%; left:4%;" aria-hidden="true">
+  <div class="cd-deco deco-1" style="top:6%; left:4%;" aria-hidden="true">
     <img src="images/cd-shape-1.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
   </div>
   <div class="cd-deco deco-2" style="bottom:8%; right:4%;" aria-hidden="true">
@@ -1937,7 +1944,7 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
   <div data-reveal>
     <div class="chip-terakhir" style="font-size: 17px;">Ayo sambut umur mu yang baru wkwk</div>
     <!-- EDIT: kalimat ajakan tiup lilin -->
-    <h1 class="hero-title"><span class="hl">Tiup Lilinnya..</span>!</h1>
+    <h1 class="hero-title"><span class="hl">Tiup Lilinnya..</span></h1>
 
 
     <div class="cake-stage">
@@ -2005,7 +2012,7 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
          kotak yang sama persis (cuma gonta-ganti opacity), jadi tingginya
          section gak pernah melebar/nyusut pas gonta-ganti — smooth. -->
     <div class="mic-blow-slot">
-      <button type="button" class="mic-blow-btn" id="micBlowBtn">🎤 Tiup Mic-nya!</button>
+      <button type="button" class="mic-blow-btn" id="micBlowBtn">🎙️ Tiup Mic-nya!</button>
       <div class="mic-blow-hint" id="micBlowHint">Tiup ke arah mic HP kamu sekarang...</div>
     </div>
   </div>
