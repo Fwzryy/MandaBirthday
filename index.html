@@ -1020,12 +1020,29 @@
 
   /* Tombol opsional "tiup mic" — gaya stiker kayak .sticker (.st-3 "Yeay!!") di hero:
      border tebal, hard-shadow, dikit dimiringin.
-     EDIT: kalau mau matiin fitur ini total, kasih display:none ke .mic-blow-btn,
-     tombol "Tiup Lilinnya" utama tetap jalan normal tanpa ini. */
+     EDIT: kalau mau matiin fitur ini total, kasih display:none ke .mic-blow-slot,
+     tombol "Tiup Lilinnya" utama tetap jalan normal tanpa ini.
+
+     Tombol & chip notifikasi ditaruh DI KOTAK GRID YANG SAMA (numpuk),
+     jadi tinggi kotaknya konsisten dari awal — pas gonta-ganti (toggle
+     opacity doang, bukan display:none/block), section GAK melebar/nyusut
+     sama sekali. Ini yang bikin transisinya smooth tanpa "lompat". */
+  .mic-blow-slot{
+    position:relative;
+    display:grid;
+    justify-items:center;
+    align-items:center;
+    width:fit-content;
+    margin:24px auto 0;
+  }
+  .mic-blow-slot > *{
+    grid-area:1 / 1;
+  }
   .mic-blow-btn{
     position:relative;
-    display:inline-flex; align-items:center; gap:8px;
-    margin:22px auto 0;
+    display:block;
+    width:fit-content;
+    margin:0;
     padding:12px 24px;
     border:3px solid var(--ink);
     border-radius:14px;
@@ -1039,32 +1056,53 @@
     box-shadow:5px 5px 0 var(--ink);
     transform:rotate(-3deg);
     cursor:pointer;
-    transition:transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
+    opacity:1;
+    transition:transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
   }
   .mic-blow-btn:hover{ transform:rotate(-3deg) translate(-2px,-2px); box-shadow:7px 7px 0 var(--ink); }
   .mic-blow-btn:active{ transform:rotate(-3deg) translate(2px,2px); box-shadow:2px 2px 0 var(--ink); }
-  .mic-blow-btn.is-hidden{ opacity:0; pointer-events:none; transform:rotate(-3deg) scale(0.7); }
+  .mic-blow-btn.is-hidden{ opacity:0; pointer-events:none; }
+
+  /* Chip "lagi dengerin mic" — numpuk pas di atas tombol (grid-area sama),
+     jadi begitu opacity-nya naik pas tombol turun, gak ada perubahan
+     tinggi section sama sekali. Warna beda (ungu) biar tetep keliatan ini
+     notifikasi khusus, tapi tetap gaya neobrutalism (border tebal +
+     hard shadow) konsisten sama elemen lain di web ini. */
   .mic-blow-hint{
-    display:inline-flex; align-items:center;
-    margin-top:16px;
-    padding:10px 20px;
+    display:block;
+    width:fit-content;
+    margin:0;
+    padding:12px 22px;
     border:3px solid var(--ink);
-    border-radius:999px;
-    background:var(--paper);
-    color:var(--ink);
+    border-radius:14px;
+    background:var(--grape);
+    color:var(--cream);
     font-family:'Space Mono', monospace;
     font-weight:700;
     font-size:12px;
-    box-shadow:4px 4px 0 var(--ink);
-    animation:mic-pulse 1s ease-in-out infinite;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    box-shadow:5px 5px 0 var(--ink);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.15s ease;
   }
-  @keyframes mic-pulse{
-    0%,100%{ transform:scale(1); }
-    50%{ transform:scale(1.05); }
-  }
+  .mic-blow-hint.is-visible{ opacity:1; pointer-events:auto; }
+
   @media (max-width:640px){
-    .mic-blow-btn{ font-size:11.5px; padding:10px 18px; margin-top:18px; }
+    .mic-blow-slot{ margin-top:20px; }
+    .mic-blow-btn{ font-size:11.5px; padding:10px 18px; }
     .mic-blow-hint{ font-size:10.5px; padding:8px 16px; }
+  }
+
+  /* Desktop: chip & tombolnya dibesarin dikit aja biar proporsional,
+     tetap numpuk di kotak yang sama, tetap gaya neobrutalism yang sama. */
+  @media (min-width:641px){
+    .mic-blow-hint{
+      font-size:14px;
+      padding:14px 26px;
+      box-shadow:6px 6px 0 var(--ink);
+    }
   }
 
   /* ---------- TANAMAN HIAS GANTUNG ---------- */
@@ -1962,9 +2000,14 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
     </div>
     <!-- EDIT: tombol opsional gaya sticker, minta izin mic pas diklik terus
          deteksi hembusan napas. Kalau ditolak/gak didukung browser,
-         tombolnya otomatis ilang & tombol utama di atas tetap jalan normal. -->
-    <button type="button" class="mic-blow-btn" id="micBlowBtn">🎤 Tiup Mic-nya!</button>
-    <div class="mic-blow-hint" id="micBlowHint" style="display:none;">Tiup ke arah mic HP kamu sekarang...</div>
+         tombolnya otomatis ilang & tombol utama di atas tetap jalan normal.
+         Dibungkus "mic-blow-slot" biar tombol & chip notifikasi numpuk di
+         kotak yang sama persis (cuma gonta-ganti opacity), jadi tingginya
+         section gak pernah melebar/nyusut pas gonta-ganti — smooth. -->
+    <div class="mic-blow-slot">
+      <button type="button" class="mic-blow-btn" id="micBlowBtn">🎤 Tiup Mic-nya!</button>
+      <div class="mic-blow-hint" id="micBlowHint">Tiup ke arah mic HP kamu sekarang...</div>
+    </div>
   </div>
 </section>
 
@@ -2353,7 +2396,7 @@ document.getElementById('celebrate-btn').addEventListener('click', () => {
   }
 
   function showButtonAgain() {
-    micHint.style.display = 'none';
+    micHint.classList.remove('is-visible');
     micBtn.classList.remove('is-hidden');
   }
 
@@ -2392,16 +2435,17 @@ document.getElementById('celebrate-btn').addEventListener('click', () => {
   }
 
   micBtn.addEventListener('click', async () => {
-    // langsung sembunyiin tombolnya begitu diklik
+    // toggle opacity doang (tombol & chip numpuk di kotak grid yang sama),
+    // jadi gak ada perubahan tinggi section = transisinya smooth
     micBtn.classList.add('is-hidden');
     micHint.textContent = 'Tiup ke arah mic HP kamu sekarang...';
-    micHint.style.display = 'inline-flex';
+    micHint.classList.add('is-visible');
 
     try {
       stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch (err) {
       // izin ditolak / gak ada mic -> diamkan, tombol klik biasa tetap berfungsi
-      micHint.style.display = 'none';
+      micHint.classList.remove('is-visible');
       micBtn.style.display = 'none';
       return;
     }
@@ -2859,12 +2903,10 @@ document.querySelectorAll('.g-photo').forEach((photo) => {
     video.pause();
     photo.classList.remove('is-playing');
   };
-
-  // Desktop: hover
   photo.addEventListener('mouseenter', playLive);
   photo.addEventListener('mouseleave', stopLive);
 
-  // HP: tap buat toggle play/stop
+  // toggle play/stop
   photo.addEventListener('touchstart', (e) => {
     if (!photo.classList.contains('has-live')) return;
     e.preventDefault();
