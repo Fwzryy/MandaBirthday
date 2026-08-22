@@ -1018,6 +1018,55 @@
   .candle-btn:hover{ transform:translate(-3px,-3px); }
   .candle-btn:active{ transform:translate(2px,2px); }
 
+  /* Tombol opsional "tiup mic" — gaya stiker kayak .sticker (.st-3 "Yeay!!") di hero:
+     border tebal, hard-shadow, dikit dimiringin.
+     EDIT: kalau mau matiin fitur ini total, kasih display:none ke .mic-blow-btn,
+     tombol "Tiup Lilinnya" utama tetap jalan normal tanpa ini. */
+  .mic-blow-btn{
+    position:relative;
+    display:inline-flex; align-items:center; gap:8px;
+    margin:22px auto 0;
+    padding:12px 24px;
+    border:3px solid var(--ink);
+    border-radius:14px;
+    background:var(--sky);
+    color:var(--ink);
+    font-family:'Space Mono', monospace;
+    font-weight:700;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    box-shadow:5px 5px 0 var(--ink);
+    transform:rotate(-3deg);
+    cursor:pointer;
+    transition:transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
+  }
+  .mic-blow-btn:hover{ transform:rotate(-3deg) translate(-2px,-2px); box-shadow:7px 7px 0 var(--ink); }
+  .mic-blow-btn:active{ transform:rotate(-3deg) translate(2px,2px); box-shadow:2px 2px 0 var(--ink); }
+  .mic-blow-btn.is-hidden{ opacity:0; pointer-events:none; transform:rotate(-3deg) scale(0.7); }
+  .mic-blow-hint{
+    display:inline-flex; align-items:center;
+    margin-top:16px;
+    padding:10px 20px;
+    border:3px solid var(--ink);
+    border-radius:999px;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Space Mono', monospace;
+    font-weight:700;
+    font-size:12px;
+    box-shadow:4px 4px 0 var(--ink);
+    animation:mic-pulse 1s ease-in-out infinite;
+  }
+  @keyframes mic-pulse{
+    0%,100%{ transform:scale(1); }
+    50%{ transform:scale(1.05); }
+  }
+  @media (max-width:640px){
+    .mic-blow-btn{ font-size:11.5px; padding:10px 18px; margin-top:18px; }
+    .mic-blow-hint{ font-size:10.5px; padding:8px 16px; }
+  }
+
   /* ---------- TANAMAN HIAS GANTUNG ---------- */
   .hanging-plants{
     position:absolute;
@@ -1911,6 +1960,11 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
       <span class="candle-btn-ghost" aria-hidden="true"></span>
       <button class="candle-btn" id="celebrate-btn"><span>Tiup Lilinnya 🎂</span></button>
     </div>
+    <!-- EDIT: tombol opsional gaya sticker, minta izin mic pas diklik terus
+         deteksi hembusan napas. Kalau ditolak/gak didukung browser,
+         tombolnya otomatis ilang & tombol utama di atas tetap jalan normal. -->
+    <button type="button" class="mic-blow-btn" id="micBlowBtn">🎤 Tiup Mic-nya!</button>
+    <div class="mic-blow-hint" id="micBlowHint" style="display:none;">Tiup ke arah mic HP kamu sekarang...</div>
   </div>
 </section>
 
@@ -2234,7 +2288,8 @@ function showRandomDoa() {
 
 /* ---------------- CONFETTI BURST (kotak-kotak, cocok sama gaya brutalist) ---------------- */
 const confettiColors = ['#FFD100', '#8B5CF6', '#2FD9A6', '#FF5A5F', '#4CC3FF', '#FF6FB0'];
-document.getElementById('celebrate-btn').addEventListener('click', () => {
+
+function celebrateBlow() {
   blowCandle();
   showRandomDoa();
   const layer = document.getElementById('confetti-layer');
@@ -2261,7 +2316,109 @@ document.getElementById('celebrate-btn').addEventListener('click', () => {
     });
   }
   gsap.fromTo('#celebrate-btn', { scale: 1 }, { scale: 1.08, duration: 0.15, yoyo: true, repeat: 1, ease: 'power2.inOut' });
+}
+
+document.getElementById('celebrate-btn').addEventListener('click', () => {
+  celebrateBlow();
 });
+
+/* ---------------- TIUP VIA MIC (opsional, tombol utama di atas tetap jalan tanpa ini) ----------------
+   Klik tombol "Tiup Mic-nya!" -> tombolnya langsung ilang -> browser minta izin mic.
+   - Ditolak/gagal/gak didukung browser -> tombol tetap hilang, tombol utama tetap jalan normal.
+   - Diizinkan -> mic dengerin volume; begitu ada hembusan napas (suara cukup
+     keras & sustained sebentar), otomatis celebrateBlow() sekali, lalu tombol
+     muncul lagi (bisa dicoba ulang). Kalau 12 detik gak ada hembusan, tombol
+     juga muncul lagi biar bisa dicoba ulang / dibatalin. */
+(function setupMicBlow(){
+  const micBtn = document.getElementById('micBlowBtn');
+  const micHint = document.getElementById('micBlowHint');
+  if (!micBtn) return;
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.AudioContext) {
+    micBtn.style.display = 'none';
+    return;
+  }
+
+  let audioCtx, analyser, source, stream, rafId, stopTimeoutId;
+  const BLOW_THRESHOLD = 0.18;   // 0 - 1, makin kecil makin sensitif
+  const BLOW_HOLD_MS = 220;      // hembusan harus sustained sekian ms biar gak kepicu suara pendek
+  let loudSinceTs = null;
+
+  function cleanupStream() {
+    if (rafId) cancelAnimationFrame(rafId);
+    if (stopTimeoutId) clearTimeout(stopTimeoutId);
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    if (audioCtx) audioCtx.close().catch(() => {});
+    loudSinceTs = null;
+  }
+
+  function showButtonAgain() {
+    micHint.style.display = 'none';
+    micBtn.classList.remove('is-hidden');
+  }
+
+  function stopListening(triggered) {
+    cleanupStream();
+    if (triggered) {
+      micHint.textContent = '✓ Berhasil ditiup!';
+      setTimeout(showButtonAgain, 1400);
+    } else {
+      showButtonAgain();
+    }
+  }
+
+  function monitor() {
+    const data = new Uint8Array(analyser.fftSize);
+    analyser.getByteTimeDomainData(data);
+    let sumSquares = 0;
+    for (let i = 0; i < data.length; i++) {
+      const v = (data[i] - 128) / 128;
+      sumSquares += v * v;
+    }
+    const rms = Math.sqrt(sumSquares / data.length);
+
+    const now = performance.now();
+    if (rms > BLOW_THRESHOLD) {
+      if (loudSinceTs === null) loudSinceTs = now;
+      if (now - loudSinceTs > BLOW_HOLD_MS) {
+        stopListening(true);
+        celebrateBlow();
+        return;
+      }
+    } else {
+      loudSinceTs = null;
+    }
+    rafId = requestAnimationFrame(monitor);
+  }
+
+  micBtn.addEventListener('click', async () => {
+    // langsung sembunyiin tombolnya begitu diklik
+    micBtn.classList.add('is-hidden');
+    micHint.textContent = 'Tiup ke arah mic HP kamu sekarang...';
+    micHint.style.display = 'inline-flex';
+
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (err) {
+      // izin ditolak / gak ada mic -> diamkan, tombol klik biasa tetap berfungsi
+      micHint.style.display = 'none';
+      micBtn.style.display = 'none';
+      return;
+    }
+
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 512;
+    source = audioCtx.createMediaStreamSource(stream);
+    source.connect(analyser);
+
+    loudSinceTs = null;
+    monitor();
+
+    // auto berhenti kalau 12 detik gak ada hembusan, biar mic ga nyala trus
+    stopTimeoutId = setTimeout(() => stopListening(false), 12000);
+  });
+})();
 
 /* ---------------- TANAMAN GANTUNG: daun digambar otomatis ----------------
    Satu daun dasar (bentuk lonjong + urat) digambar ulang berkali-kali
