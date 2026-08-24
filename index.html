@@ -451,7 +451,26 @@
     z-index:4;
   }
   .sticker.round{ border-radius:50%; }
-  .st-3{ bottom:-6%; right:10%; width:88px; padding:10px 6px; border-radius:14px; background:var(--sky); font-size:11px; text-transform:uppercase; letter-spacing:0.06em; transform:rotate(4deg); }
+  .st-3{ bottom:-6%; right:10%; width:88px; padding:10px 6px; border-radius:14px; background:var(--sky); font-size:11px; text-transform:uppercase; letter-spacing:0.06em; transform:translate(var(--tiltX,0px),var(--tiltY,0px)) rotate(4deg); }
+
+  /* Tombol kecil khusus iOS buat minta izin akses sensor kemiringan
+     (device orientation). Cuma dimunculin lewat JS kalau browsernya
+     butuh izin itu; begitu ditap, ilang sendiri. */
+  .tilt-permission-btn{
+    position:absolute;
+    left:50%; bottom:18px;
+    transform:translateX(-50%);
+    z-index:6;
+    background:var(--paper);
+    border:3px solid var(--ink);
+    border-radius:999px;
+    padding:8px 16px;
+    font-family:'Space Mono', monospace;
+    font-weight:700;
+    font-size:11px;
+    box-shadow:3px 3px 0 var(--ink);
+    cursor:pointer;
+  }
 
   @media (max-width:900px){
     .hero-grid{ grid-template-columns:1fr; text-align:center; }
@@ -612,14 +631,7 @@
   .cd-deco .placeholder .hint{ font-family:'Space Mono',monospace; font-size:8px; letter-spacing:0.03em; opacity:0.75; margin-top:4px; text-align:center; padding:0 6px; line-height:1.3; }
   @media (max-width:640px){
     /* disembunyiin di HP biar ga sempit/nabrak judul yang udah dipas-in */
-    .cd-deco{
-    width:clamp(100px,7vw,110px);
-  }
-  .deco-2 {
-    top: -700px;
-    left: 310px;
-    width:clamp(200px,7vw,110px);
-  }
+    .cd-deco{ display:none; }
   }
   .clock{
     margin-top:64px;
@@ -726,12 +738,12 @@
   .ms-5{ top:35%; left:3%; width:240px; height: 240px; animation:shape-float 4.4s ease-in-out infinite 0.9s; }
   .ms-6{ top:27%; right:3%; width:300px; height: 300px; animation:shape-float 5.1s ease-in-out infinite 0.5s; }
   @keyframes shape-float{
-    0%,100%{ transform:translateY(0) rotate(0deg); }
-    50%{ transform:translateY(-12px) rotate(8deg); }
+    0%,100%{ transform:translate(var(--tiltX,0px),var(--tiltY,0px)) translateY(0) rotate(0deg); }
+    50%{ transform:translate(var(--tiltX,0px),var(--tiltY,0px)) translateY(-12px) rotate(8deg); }
   }
   @keyframes shape-float-2{
-    0%,100%{ transform:translateY(0) rotate(0deg); }
-    50%{ transform:translateY(12px) rotate(-8deg); }
+    0%,100%{ transform:translate(var(--tiltX,0px),var(--tiltY,0px)) translateY(0) rotate(0deg); }
+    50%{ transform:translate(var(--tiltX,0px),var(--tiltY,0px)) translateY(12px) rotate(-8deg); }
   }
   @media (max-width:760px){
     .ms-2, .ms-3,.ms-4,.ms-5, .ms-6{ display:none; }
@@ -1053,8 +1065,8 @@
     padding:12px 24px;
     border:3px solid var(--ink);
     border-radius:14px;
-    background:#434dc6;
-    color:var(--paper);
+    background:var(--sky);
+    color:var(--ink);
     font-family:'Space Mono', monospace;
     font-weight:700;
     font-size:13px;
@@ -1124,12 +1136,12 @@
   .hang-plant.right{ right:2%; width:clamp(110px,12vw,170px); animation:plant-sway 5.2s ease-in-out infinite 0.4s; transform-origin:top center; }
   .hang-plant.mid{ left:50%; width:clamp(80px,8vw,120px); animation:plant-sway-mid 4.8s ease-in-out infinite 0.8s; transform-origin:top center; }
   @keyframes plant-sway{
-    0%,100%{ transform:rotate(-2.5deg); }
-    50%{ transform:rotate(2.5deg); }
+    0%,100%{ transform:translate(var(--tiltX,0px),var(--tiltY,0px)) rotate(-2.5deg); }
+    50%{ transform:translate(var(--tiltX,0px),var(--tiltY,0px)) rotate(2.5deg); }
   }
   @keyframes plant-sway-mid{
-    0%,100%{ transform:translateX(-50%) rotate(-2deg); }
-    50%{ transform:translateX(-50%) rotate(2deg); }
+    0%,100%{ transform:translateX(-50%) translate(var(--tiltX,0px),var(--tiltY,0px)) rotate(-2deg); }
+    50%{ transform:translateX(-50%) translate(var(--tiltX,0px),var(--tiltY,0px)) rotate(2deg); }
   }
   @media (max-width:760px){
     .hang-plant.mid{ display:none; }
@@ -1629,50 +1641,50 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
   <!-- Shape-shape dekorasi latar, senada sama yang di halaman surat.
        EDIT: ganti src ke images/hero-shape-1.png dst kalau mau custom. -->
   <div class="hero-shapes" aria-hidden="true">
-    <div class="h-shape hs-1">
+    <div class="h-shape hs-1" data-tilt="0.5">
       <div class="h-shape-inner">
         <img src="images/hero-shape-1.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
         <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><path d="M30 4l6 18h19l-15 11 6 18-16-11-16 11 6-18-15-11h19z" fill="var(--sunshine)" stroke="#111" stroke-width="3" stroke-linejoin="round"/></svg>
       </div>
     </div>
-    <div class="h-shape hs-2">
+    <div class="h-shape hs-2" data-tilt="0.25">
       <div class="h-shape-inner">
         <img src="images/hero-shape-2.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
         <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><circle cx="30" cy="30" r="24" fill="var(--mint)" stroke="#111" stroke-width="3"/></svg>
       </div>
     </div>
-    <div class="h-shape hs-3">
+    <div class="h-shape hs-3" data-tilt="0.35">
       <div class="h-shape-inner">
         <img src="images/hero-shape-3.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
         <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><rect x="8" y="8" width="44" height="44" rx="10" fill="var(--bubblegum)" stroke="#111" stroke-width="3" transform="rotate(12 30 30)"/></svg>
       </div>
     </div>
-    <div class="h-shape hs-4">
+    <div class="h-shape hs-4" data-tilt="0.3">
       <div class="h-shape-inner">
         <img src="images/hero-shape-4.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
         <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><path d="M30 6c8 10 18 16 18 27a18 18 0 01-36 0c0-11 10-17 18-27z" fill="var(--sky)" stroke="#111" stroke-width="3"/></svg>
       </div>
     </div>
-    <div class="h-shape hs-5">
+    <div class="h-shape hs-5" data-tilt="0.2">
       <div class="h-shape-inner">
         <img src="images/hero-shape-5.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
         <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><path d="M6 30c8-14 16 14 24 0s16 14 24 0" stroke="#111" stroke-width="4" stroke-linecap="round" fill="none"/></svg>
       </div>
     </div>
-    <div class="h-shape hs-6">
+    <div class="h-shape hs-6" data-tilt="0.22">
       <div class="h-shape-inner">
         <img src="images/hero-shape-6.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
         <svg class="shape-fallback" style="display:none;" viewBox="0 0 60 60" fill="none"><rect x="6" y="26" width="48" height="8" fill="var(--coral)" stroke="#111" stroke-width="3" transform="rotate(-8 30 30)"/></svg>
       </div>
     </div>
-    <div class="h-shape hs-7">
+    <div class="h-shape hs-7" data-tilt="0.55">
       <div class="h-shape-inner">
         <svg class="shape-fallback" viewBox="0 0 60 60" fill="none"><path d="M30 4v10M30 46v10M4 30h10M46 30h10M12 12l7 7M41 41l7 7M48 12l-7 7M19 41l-7 7" stroke="#111" stroke-width="3.5" stroke-linecap="round"/></svg>
       </div>
     </div>
   </div>
 
-  <div class="hero-hang-plant" aria-hidden="true">
+  <div class="hero-hang-plant" aria-hidden="true" data-tilt="0.4">
     <div class="hang-plant-inner" style="aspect-ratio:180/260;">
       <img src="images/plant-right.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
     </div>
@@ -1708,9 +1720,16 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
         <div class="caption">SI PALING ULTAH ✨</div>
       </div>
 
-      <div class="sticker st-3">Yeay!!</div>
+      <div class="sticker st-3" data-tilt="0.45">Yeay!!</div>
     </div>
   </div>
+
+  <!-- EDIT: khusus iOS (Safari), browser wajib minta izin akses sensor
+       kemiringan lewat aksi tap manual (gak bisa otomatis). Tombol kecil
+       ini nongol cuma kalau browsernya butuh izin itu; begitu ditap &
+       diizinkan, dia ilang sendiri. Android & desktop gak perlu ini sama
+       sekali (efeknya otomatis jalan). -->
+  <button type="button" class="tilt-permission-btn" id="tiltPermissionBtn" style="display:none;">✨ Aktifin efek miring</button>
 </section>
 
 <!-- ============ TICKER ============ -->
@@ -1815,7 +1834,7 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
        - pakai salah satu dari "top" ATAU "bottom" (yang satunya hapus)
        - pakai salah satu dari "left" ATAU "right" (yang satunya hapus)
        Contoh sekarang: shape 1 nempel pojok kiri-atas, shape 2 pojok kanan-bawah. -->
-  <div class="cd-deco deco-1" style="top:6%; left:4%;" aria-hidden="true">
+  <div class="cd-deco" style="top:6%; left:4%;" aria-hidden="true">
     <img src="images/cd-shape-1.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
   </div>
   <div class="cd-deco deco-2" style="bottom:8%; right:4%;" aria-hidden="true">
@@ -1900,9 +1919,9 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
   <!-- Data ucapan — EDIT / tambah objek baru di sini kalau mau lebih dari 3 "lembar" surat -->
   <script id="messagesData" type="application/json">
   [
-    { "text": "Terima kasih sudah bertahan melewati hari-hari yang berat, fase-fase bingung, dan proses panjang yang nggak mudah. Kalau bukan karena ketangguhanmu di masa lalu, Amanda hari ini nggak akan sekeren dan sehebat sekarang.", "from": " Dari Amanda yang Dulu, dengan Bangga" },
+    { "text": "Terima kasih sudah bertahan melewati hari-hari yang berat, fase-fase bingung, dan proses panjang yang nggak mudah. Kalau bukan karena ketangguhanmu di masa lalu, Amanda hari ini nggak akan sekeren dan sehebat sekarang.", "from": "— Dari Amanda yang Dulu, dengan Bangga" },
     { "text": "Hari ini giliranmu yang jadi pusat semesta. Nikmati setiap tawa, apresiasi setiap hal kecil yang sudah kamu capai, dan ingatlah kalau kehadiranmu selalu memberi energi hangat buat orang-orang di sekitarmu.ㅤㅤㅤ", "from": "Dari Amanda Hari Ini, yang Sedang Dirayakan" },
-    { "text": "Melangkahlah ke umur yang baru dengan kepala tegak. Di depan sana, ada banyak cerita seru, mimpi-mimpi yang siap terwujud, dan bahagia yang sudah menunggu untuk kamu jemput. Kamu pasti bisa melaluinya!", "from": "Dari Amanda di Masa Depan, yang Menunggumu" }
+    { "text": "Melangkahlah ke umur yang baru dengan kepala tegak. Di depan sana, ada banyak cerita seru, mimpi-mimpi yang siap terwujud, dan bahagia yang sudah menunggu untuk kamu jemput. Kamu pasti bisa melaluinya!", "from": "— Dari Amanda di Masa Depan, yang Menunggumu" }
   ]
   </script>
 
@@ -1944,7 +1963,7 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
   <div data-reveal>
     <div class="chip-terakhir" style="font-size: 17px;">Ayo sambut umur mu yang baru wkwk</div>
     <!-- EDIT: kalimat ajakan tiup lilin -->
-    <h1 class="hero-title"><span class="hl">Tiup Lilinnya..</span></h1>
+    <h1 class="hero-title"><span class="hl">Tiup Lilinnya..</span>!</h1>
 
 
     <div class="cake-stage">
@@ -2012,7 +2031,7 @@ background: linear-gradient(90deg,rgba(235, 255, 102, 1) 0%, rgba(179, 255, 102,
          kotak yang sama persis (cuma gonta-ganti opacity), jadi tingginya
          section gak pernah melebar/nyusut pas gonta-ganti — smooth. -->
     <div class="mic-blow-slot">
-      <button type="button" class="mic-blow-btn" id="micBlowBtn">🎙️ Tiup Mic-nya!</button>
+      <button type="button" class="mic-blow-btn" id="micBlowBtn">🎤 Tiup Mic-nya!</button>
       <div class="mic-blow-hint" id="micBlowHint">Tiup ke arah mic HP kamu sekarang...</div>
     </div>
   </div>
@@ -2910,10 +2929,12 @@ document.querySelectorAll('.g-photo').forEach((photo) => {
     video.pause();
     photo.classList.remove('is-playing');
   };
+
+  // Desktop: hover
   photo.addEventListener('mouseenter', playLive);
   photo.addEventListener('mouseleave', stopLive);
 
-  // toggle play/stop
+  // HP: tap buat toggle play/stop
   photo.addEventListener('touchstart', (e) => {
     if (!photo.classList.contains('has-live')) return;
     e.preventDefault();
@@ -2923,6 +2944,86 @@ document.querySelectorAll('.g-photo').forEach((photo) => {
 
   video.addEventListener('ended', stopLive);
 });
+
+/* ---------------- HERO PARALLAX TILT ----------------
+   Elemen dekorasi (shape, tanaman gantung, stiker "Yeay!!") gerak dikit
+   ngikutin: gerakan mouse (desktop) atau kemiringan HP (mobile, via
+   sensor gyroscope/accelerometer). Tiap elemen punya atribut
+   data-tilt="0.2" s/d "0.55" di HTML -> makin gede angkanya, makin jauh
+   geraknya (berasa makin "deket"/nonjol), bikin efek kedalaman/parallax.
+   EDIT: mau nambah elemen lain? tinggal kasih attribute data-tilt="0.3"
+   (atau angka lain) di elemen manapun di dalam #hero. */
+(function setupHeroTilt(){
+  const heroSection = document.getElementById('hero');
+  if (!heroSection) return;
+  const tiltEls = Array.from(heroSection.querySelectorAll('[data-tilt]'));
+  if (!tiltEls.length) return;
+
+  const MAX_PX = 26; // jarak gerak maksimum dalam px, buat elemen dengan depth=1
+  let targetX = 0, targetY = 0; // -1..1
+  let currentX = 0, currentY = 0;
+  const LERP = 0.08; // makin kecil, makin "berat"/nyusul pelan (smoothing)
+
+  function applyFrame() {
+    currentX += (targetX - currentX) * LERP;
+    currentY += (targetY - currentY) * LERP;
+    tiltEls.forEach((el) => {
+      const depth = parseFloat(el.dataset.tilt) || 0.3;
+      el.style.setProperty('--tiltX', (currentX * MAX_PX * depth).toFixed(2) + 'px');
+      el.style.setProperty('--tiltY', (currentY * MAX_PX * depth).toFixed(2) + 'px');
+    });
+    requestAnimationFrame(applyFrame);
+  }
+  requestAnimationFrame(applyFrame);
+
+  // ---- Desktop: ngikutin posisi mouse relatif ke tengah section hero ----
+  heroSection.addEventListener('mousemove', (e) => {
+    const rect = heroSection.getBoundingClientRect();
+    const relX = (e.clientX - rect.left) / rect.width;   // 0..1
+    const relY = (e.clientY - rect.top) / rect.height;   // 0..1
+    targetX = (relX - 0.5) * 2;  // -1..1
+    targetY = (relY - 0.5) * 2;  // -1..1
+  });
+  heroSection.addEventListener('mouseleave', () => {
+    targetX = 0; targetY = 0;
+  });
+
+  // ---- Mobile: ngikutin kemiringan HP (gyroscope / accelerometer) ----
+  function onOrientation(e) {
+    if (e.gamma === null || e.beta === null) return;
+    // gamma: miring kiri-kanan (-90..90), beta: miring depan-belakang (-180..180,
+    // tapi wajar dipegang normal biasanya -90..90). Dibagi 25 biar sensitif
+    // ke gerakan kecil, terus di-clamp -1..1.
+    const gx = Math.max(-1, Math.min(1, e.gamma / 25));
+    const gy = Math.max(-1, Math.min(1, (e.beta - 40) / 25)); // -40 offset: asumsi HP dipegang agak miring ke badan
+    targetX = gx;
+    targetY = gy;
+  }
+
+  function startGyro() {
+    window.addEventListener('deviceorientation', onOrientation);
+  }
+
+  const needsPermission =
+    typeof DeviceOrientationEvent !== 'undefined' &&
+    typeof DeviceOrientationEvent.requestPermission === 'function';
+
+  if (needsPermission) {
+    const btn = document.getElementById('tiltPermissionBtn');
+    if (btn) {
+      btn.style.display = 'inline-block';
+      btn.addEventListener('click', async () => {
+        try {
+          const result = await DeviceOrientationEvent.requestPermission();
+          if (result === 'granted') startGyro();
+        } catch (err) {  }
+        btn.style.display = 'none';
+      });
+    }
+  } else if ('DeviceOrientationEvent' in window) {
+    startGyro();
+  }
+})();
 </script>
 </body>
 </html>
